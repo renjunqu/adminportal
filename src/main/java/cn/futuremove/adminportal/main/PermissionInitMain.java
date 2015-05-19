@@ -1,0 +1,46 @@
+package cn.futuremove.adminportal.main;
+
+import cn.futuremove.adminportal.model.sys.RoleAuthority;
+import cn.futuremove.adminportal.service.sys.RoleAuthorityService;
+import cn.futuremove.adminportal.service.sys.impl.RoleAuthorityServiceImpl;
+import cn.futuremove.adminportal.util.ApplicationContextUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+/**
+ * Created by figoxu on 15/4/20.
+ */
+public class PermissionInitMain extends BaseMain{
+
+    public static void main(String[] args) {
+        initSpring();
+        JdbcTemplate jdbcTemplate = ApplicationContextUtil.getBean(JdbcTemplate.class);
+
+        List<String> menuCodeList = jdbcTemplate.queryForList("select DISTINCT menu_code from authority", String.class);
+        for(String menuCode:menuCodeList){
+            System.out.println(menuCode);
+        }
+
+        List<String> roleList = jdbcTemplate.queryForList("select role_key from role", String.class);
+        for(String role:roleList){
+            System.out.println(role);
+        }
+        String sql = "truncate table role_authority";
+        jdbcTemplate.execute(sql);
+
+        RoleAuthorityService roleAuthorityService = ApplicationContextUtil.getBean(RoleAuthorityServiceImpl.class);
+
+        for(String roleKey :roleList){
+            for(String menuCode:menuCodeList){
+                RoleAuthority roleAuthority = new RoleAuthority();
+                roleAuthority.setMenuCode(menuCode);
+                roleAuthority.setRoleKey(roleKey);
+                roleAuthorityService.persist(roleAuthority);
+            }
+        }
+
+        System.exit(-1);
+    }
+
+}

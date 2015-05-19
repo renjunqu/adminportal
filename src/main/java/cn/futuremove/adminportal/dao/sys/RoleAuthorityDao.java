@@ -1,0 +1,13 @@
+package cn.futuremove.adminportal.dao.sys;
+
+import cn.futuremove.adminportal.model.sys.RoleAuthority;
+
+import core.dao.Dao;
+
+/**
+ *
+ *
+ */
+public interface RoleAuthorityDao extends Dao<RoleAuthority> {
+
+}

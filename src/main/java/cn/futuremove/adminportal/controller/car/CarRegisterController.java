@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joymove.entity.JOYNCar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,8 +28,6 @@ import cn.futuremove.adminportal.util.http.*;
 import sun.misc.BASE64Encoder;
 
 import cn.futuremove.adminportal.controller.BaseController;
-import cn.futuremove.adminportal.model.joyMove.JoyNcar;
-import cn.futuremove.adminportal.model.joyMove.JoyUsers;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 
@@ -65,7 +64,7 @@ public class CarRegisterController  extends BaseController {
 		       
 		       sqlQuery.append(" limit ").append(start).append(",").append(limit);
 		         int totalResult = jdbcTemplate.queryForInt(countSqlQuery.toString());
-		       List<JoyNcar> carList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JoyNcar>(JoyNcar.class));
+		       List<JOYNCar> carList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
 		       Map jsonMap = new HashMap();
 		       jsonMap.put("root", carList);
 		       jsonMap.put("total", totalResult);
@@ -74,11 +73,11 @@ public class CarRegisterController  extends BaseController {
 			   Integer id =Integer.valueOf( request.getParameter("id") );
 			    sqlQuery = new StringBuffer("select * from  JOY_NCar where id  = ");
 				sqlQuery.append(id);
-				List<JoyNcar> carList  = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JoyNcar>(JoyNcar.class));
-				JoyNcar car = carList.get(0);
+				List<JOYNCar> carList  = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
+			   JOYNCar car = carList.get(0);
 			    //tell cloudmove
 				String cmUrl = "http://123.57.151.176:8088/cloudmove/cm/vin/delete";
-				String cmData = "vin="+car.getVinnum()+"&time="+System.currentTimeMillis();
+				String cmData = "vin="+car.vinNum +"&time="+System.currentTimeMillis();
 				String result = HttpPostUtils.post(cmUrl, cmData);
 				logger.debug("result of cloudmove is "+result);
 			   //delete it  
@@ -176,12 +175,12 @@ public class CarRegisterController  extends BaseController {
 			 Map jsonMap = new HashMap();
 			 StringBuffer sqlQuery = new StringBuffer("select * from  JOY_NCar where id  = ");
 			 sqlQuery.append(carId);
-			 List<JoyNcar> carList  = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JoyNcar>(JoyNcar.class));
-			 JoyNcar car = carList.get(0);
+			 List<JOYNCar> carList  = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
+			 JOYNCar car = carList.get(0);
 			 
 			 String cmUrl = "http://123.57.151.176:8088/cloudmove/cm/vin/sendCert";//ConfigUtils.getPropValues("cloudmove.sendKey");
 			 String timeStr = String.valueOf(System.currentTimeMillis());
-			 String cmData = "vin="+car.getVinnum()+"&cert="+car.getRsaprikey()+"&time="+timeStr;
+			 String cmData = "vin="+car.vinNum +"&cert="+car.RSAPubKey+"&time="+timeStr;
 			 String result = HttpPostUtils.post(cmUrl, cmData);
 			 logger.debug("result of cloudmove is "+result);
 		     jsonMap.put("reult",0);

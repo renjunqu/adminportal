@@ -1,8 +1,9 @@
 package cn.futuremove.adminportal.controller.user;
 
 import cn.futuremove.adminportal.controller.BaseController;
-import cn.futuremove.adminportal.model.joyMove.JoyOrder;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
+import com.joymove.entity.JOYOrder;
+import com.joymove.entity.JOYUser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,7 +42,7 @@ public class OrderController  extends BaseController {
         }
         sqlBuffer.append(" limit ").append(start).append(",").append(limit);
         int total = jdbcTemplate_joyMove.queryForInt(countSqlBuffer.toString());
-        List<JoyOrder> joyOrderList = jdbcTemplate_joyMove.query(sqlBuffer.toString(), new SmartRowMapper<JoyOrder>(JoyOrder.class));
+        List<JOYOrder> joyOrderList = jdbcTemplate_joyMove.query(sqlBuffer.toString(), new SmartRowMapper<JOYOrder>(JOYOrder.class));
 
         Map jsonMap = new HashMap();
         jsonMap.put("root", joyOrderList);

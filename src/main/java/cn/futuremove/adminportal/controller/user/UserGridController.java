@@ -1,13 +1,13 @@
 package cn.futuremove.adminportal.controller.user;
 
 import cn.futuremove.adminportal.controller.BaseController;
-import cn.futuremove.adminportal.model.joyMove.JoyOrder;
-import cn.futuremove.adminportal.model.joyMove.JoyUsers;
 import cn.futuremove.adminportal.model.joyMove.param.UserGridParameter;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 import cn.futuremove.adminportal.core.support.JqGridPageView;
 import com.futuremove.cacheServer.service.CarService;
+import com.joymove.entity.JOYUser;
+import com.joymove.service.JOYUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +34,9 @@ public class UserGridController  extends BaseController {
     @Resource(name = "carService")
     private CarService cacheCarService;
 
+    @Resource(name = "JOYUserService")
+    private JOYUserService joyUserService;
+
 
     @RequestMapping(value = "/user/modify", method = { RequestMethod.POST, RequestMethod.GET })
     public void modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -54,37 +57,14 @@ public class UserGridController  extends BaseController {
 
     @RequestMapping("/user/query")
     public void userQuery(UserGridParameter userGridParameter,HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Integer pageNo = Integer.valueOf(request.getParameter("page"));
-        Integer pageSize = Integer.valueOf(request.getParameter("rows"));
-        String query = userGridParameter.getQuery();
-        StringBuffer sqlQuery = new StringBuffer("select * from JOY_Users");
-        StringBuffer countSqlQuery = new StringBuffer("select count(*) from JOY_Users");
-        if(!StringUtils.isBlank(query)){
-            sqlQuery.append(" where  mobileno like '%"+query+"%' ");
-            sqlQuery.append(" and  username like '%"+query+"%' ");
 
-            countSqlQuery.append(" where  mobileno like '%"+query+"%' ");
-            countSqlQuery.append(" and  username like '%"+query+"%' ");
-        }
-        if(pageSize==null){
-            pageSize = 10;
-        }
-        if(pageNo==null){
-            pageNo=1;
-        }
-        int start = (pageNo-1)*pageSize;
-        int limit = pageSize;
-        sqlQuery.append(" limit ").append(start).append(",").append(limit);
-//
-        JdbcTemplate jdbcTemplate = (JdbcTemplate) ApplicationContextUtil.getBean("jdbcTemplate_joyMove");
-        int totalResult = jdbcTemplate.queryForInt(countSqlQuery.toString());
-
-        List<JoyUsers> joyUsersList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JoyUsers>(JoyUsers.class));
+        JOYUser user = new JOYUser();
+        List<JOYUser> joyUsersList = joyUserService.getNeededUser(user);
 
 
         int totalPage = (totalResult+pageSize-1  )/pageSize;
 
-        JqGridPageView<JoyUsers> departmentListView = new JqGridPageView<JoyUsers>();
+        JqGridPageView<JOYUser> departmentListView = new JqGridPageView<JOYUser>();
         departmentListView.setMaxResults(pageSize);
         departmentListView.setRows(joyUsersList);
         departmentListView.setRecords(totalResult);
@@ -146,7 +126,7 @@ public class UserGridController  extends BaseController {
         JdbcTemplate jdbcTemplate = (JdbcTemplate) ApplicationContextUtil.getBean("jdbcTemplate_joyMove");
         int totalResult = jdbcTemplate.queryForInt(countSqlQuery.toString());
 
-        List<JoyUsers> joyUsersList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JoyUsers>(JoyUsers.class));
+        List<JOYUser> joyUsersList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYUser>(JOYUser.class));
 
 
         Map jsonMap = new HashMap();
@@ -177,7 +157,7 @@ public class UserGridController  extends BaseController {
         JdbcTemplate jdbcTemplate = (JdbcTemplate) ApplicationContextUtil.getBean("jdbcTemplate_joyMove");
         int totalResult = jdbcTemplate.queryForInt(countSqlQuery.toString());
 
-        List<JoyOrder> joyOrderList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JoyOrder>(JoyOrder.class));
+        List<JOYUser> joyOrderList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYUser>(JOYUser.class));
 
 
         Map jsonMap = new HashMap();
@@ -193,7 +173,7 @@ public class UserGridController  extends BaseController {
         String id = request.getParameter("id");
         String sql = "update JOY_Users set authenticateid=1 where id="+id;
         jdbcTemplate.execute(sql);
-        JoyUsers joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JoyUsers>(JoyUsers.class));
+        JOYUser joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JOYUser>(JOYUser.class));
      }
 
     @RequestMapping("/userAdmin/approve/drive")
@@ -202,7 +182,7 @@ public class UserGridController  extends BaseController {
         String id = request.getParameter("id");
         String sql = "update JOY_Users set authenticatedriver=1 where id="+id;
         jdbcTemplate.execute(sql);
-        JoyUsers joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JoyUsers>(JoyUsers.class));
+        JOYUser joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JOYUser>(JOYUser.class));
     }
 
 }

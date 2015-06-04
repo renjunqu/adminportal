@@ -19,7 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import cn.futuremove.adminportal.service.sys.InformationService;
+import cn.futuremove.adminportal.service.InformationService;
 
 import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
 import cn.futuremove.adminportal.core.service.Service;

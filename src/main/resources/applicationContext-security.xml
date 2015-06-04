@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security classpath:/org/springframework/security/config/spring-security-3.2.xsd
     http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd">
 	<global-method-security>
-		<protect-pointcut expression="execution(* cn.futuremove.adminportal.service.sys.AuthorityService.*(..))" access="ROLE_ADMIN,ROLE_RESTRICTED_ADMIN,ROLE_USER" />
+		<protect-pointcut expression="execution(* cn.futuremove.adminportal.service.AuthorityService.*(..))" access="ROLE_ADMIN,ROLE_RESTRICTED_ADMIN,ROLE_USER" />
 	</global-method-security>
 	<http pattern="/static/**" security="none" />
 	<http auto-config="true" use-expressions="true">

@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.futuremove.adminportal.service.sys.RoleAuthorityService;
+import cn.futuremove.adminportal.service.RoleAuthorityService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -26,7 +26,7 @@ import cn.futuremove.adminportal.core.Constant;
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
 import cn.futuremove.adminportal.model.sys.Authority;
 import cn.futuremove.adminportal.model.sys.RoleAuthority;
-import cn.futuremove.adminportal.service.sys.AuthorityService;
+import cn.futuremove.adminportal.service.AuthorityService;
 
 import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
 import cn.futuremove.adminportal.core.support.JqGridPageView;

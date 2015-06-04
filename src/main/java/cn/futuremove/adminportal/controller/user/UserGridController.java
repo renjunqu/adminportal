@@ -1,6 +1,5 @@
 package cn.futuremove.adminportal.controller.user;
 
-import cn.futuremove.adminportal.cache.UserCacheCleaner;
 import cn.futuremove.adminportal.controller.BaseController;
 import cn.futuremove.adminportal.model.joyMove.JoyOrder;
 import cn.futuremove.adminportal.model.joyMove.JoyUsers;
@@ -8,6 +7,7 @@ import cn.futuremove.adminportal.model.joyMove.param.UserGridParameter;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 import cn.futuremove.adminportal.core.support.JqGridPageView;
+import com.futuremove.cacheServer.service.CarService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,6 +30,10 @@ import java.util.Map;
 public class UserGridController  extends BaseController {
     @Autowired
     JdbcTemplate jdbcTemplate_joyMove;
+
+    @Resource(name = "carService")
+    private CarService cacheCarService;
+
 
     @RequestMapping(value = "/user/modify", method = { RequestMethod.POST, RequestMethod.GET })
     public void modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -189,8 +194,7 @@ public class UserGridController  extends BaseController {
         String sql = "update JOY_Users set authenticateid=1 where id="+id;
         jdbcTemplate.execute(sql);
         JoyUsers joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JoyUsers>(JoyUsers.class));
-        UserCacheCleaner.clearCache(joyUsers.getMobileno());
-    }
+     }
 
     @RequestMapping("/userAdmin/approve/drive")
     public void updateDriveStatus(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -199,8 +203,6 @@ public class UserGridController  extends BaseController {
         String sql = "update JOY_Users set authenticatedriver=1 where id="+id;
         jdbcTemplate.execute(sql);
         JoyUsers joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JoyUsers>(JoyUsers.class));
-        UserCacheCleaner.clearCache(joyUsers.getMobileno());
-
     }
 
 }

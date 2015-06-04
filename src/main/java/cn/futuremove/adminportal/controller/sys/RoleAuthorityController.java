@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
 import cn.futuremove.adminportal.model.sys.RoleAuthority;
-import cn.futuremove.adminportal.service.sys.RoleAuthorityService;
+import cn.futuremove.adminportal.service.RoleAuthorityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

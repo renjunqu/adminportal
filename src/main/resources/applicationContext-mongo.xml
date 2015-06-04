@@ -41,7 +41,7 @@
 	<bean id="datastore" class="com.futuremove.cacheServer.beans.DatastoreFactoryBean">
 		<property name="morphia" ref="morphia" />
 		<property name="mongo" ref="mongoClient" />
-		<property name="dbName" value="cacheServer_1" />
+		<property name="dbName" value="cacheServer" />
 		<property name="toEnsureIndexes" value="true"/>
 		<property name="toEnsureCaps" value="true"/>
 	</bean>

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.futuremove.adminportal.core.Constant;
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
-import cn.futuremove.adminportal.service.sys.RoleService;
+import cn.futuremove.adminportal.service.RoleService;
 
 import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
 import cn.futuremove.adminportal.core.support.JqGridPageView;

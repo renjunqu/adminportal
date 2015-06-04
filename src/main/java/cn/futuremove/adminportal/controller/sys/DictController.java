@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.futuremove.adminportal.model.sys.Dict;
-import cn.futuremove.adminportal.service.sys.DictService;
+import cn.futuremove.adminportal.service.DictService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

@@ -2,18 +2,19 @@ package cn.futuremove.adminportal.controller.user;
 
 import cn.futuremove.adminportal.controller.BaseController;
 import com.futuremove.cacheServer.entity.Car;
-import cn.futuremove.adminportal.mongo.service.CarServiceImpl;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.GsonInstance;
 import cn.futuremove.adminportal.util.lbs.LbsNearbyVo;
 import cn.futuremove.adminportal.util.lbs.LbsService;
 import cn.futuremove.adminportal.util.lbs.LbsVo;
+import com.futuremove.cacheServer.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import java.util.Map;
 public class CarLocationController extends BaseController {
     @Autowired
     JdbcTemplate jdbcTemplate_joyMove;
+    @Resource(name = "carService")
+    private CarService carService;
 
 
 
@@ -44,9 +47,6 @@ public class CarLocationController extends BaseController {
                         + "\t@state:" + state
                         + "\t@filterText:" + filterText
         );
-
-        CarServiceImpl carService = (CarServiceImpl) ApplicationContextUtil.getBean("carService");
-
 
         double defaultX = 116.413879;
         double defaultY = 39.919216;
@@ -164,7 +164,6 @@ public class CarLocationController extends BaseController {
         Integer limit = Integer.valueOf(request.getParameter("limit"));
 
 
-        CarServiceImpl carService = (CarServiceImpl) ApplicationContextUtil.getBean("carService");
 
 
         HashMap<String, Object> likeCondition = new HashMap<String, Object>();

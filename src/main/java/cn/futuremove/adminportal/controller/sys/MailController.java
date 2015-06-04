@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.futuremove.adminportal.model.sys.Mail;
-import cn.futuremove.adminportal.service.sys.AttachmentService;
-import cn.futuremove.adminportal.service.sys.MailService;
+import cn.futuremove.adminportal.service.AttachmentService;
+import cn.futuremove.adminportal.service.MailService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.core.io.FileSystemResource;

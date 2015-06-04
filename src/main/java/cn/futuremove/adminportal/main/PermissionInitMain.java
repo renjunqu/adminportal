@@ -1,8 +1,8 @@
 package cn.futuremove.adminportal.main;
 
 import cn.futuremove.adminportal.model.sys.RoleAuthority;
-import cn.futuremove.adminportal.service.sys.RoleAuthorityService;
-import cn.futuremove.adminportal.service.sys.impl.RoleAuthorityServiceImpl;
+import cn.futuremove.adminportal.service.RoleAuthorityService;
+import cn.futuremove.adminportal.service.impl.RoleAuthorityServiceImpl;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 

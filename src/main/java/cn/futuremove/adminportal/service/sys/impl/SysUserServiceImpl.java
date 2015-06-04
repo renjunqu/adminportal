@@ -16,7 +16,7 @@ import cn.futuremove.adminportal.model.sys.Department;
 import cn.futuremove.adminportal.model.sys.SysUser;
 import cn.futuremove.adminportal.service.sys.SysUserService;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

@@ -12,8 +12,8 @@ import org.hibernate.search.SearchFactory;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Repository;
 
-import core.dao.BaseDao;
-import core.util.HtmlUtils;
+import cn.futuremove.adminportal.core.dao.BaseDao;
+import cn.futuremove.adminportal.core.util.HtmlUtils;
 
 /**
  *

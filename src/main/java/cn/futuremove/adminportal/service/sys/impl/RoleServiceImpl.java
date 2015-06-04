@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import cn.futuremove.adminportal.dao.sys.RoleDao;
 import cn.futuremove.adminportal.service.sys.RoleService;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

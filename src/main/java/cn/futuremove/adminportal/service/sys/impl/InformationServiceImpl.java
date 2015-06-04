@@ -10,8 +10,8 @@ import cn.futuremove.adminportal.model.sys.Information;
 import cn.futuremove.adminportal.service.sys.InformationService;
 import org.springframework.stereotype.Service;
 
-import core.service.BaseService;
-import core.util.HtmlUtils;
+import cn.futuremove.adminportal.core.service.BaseService;
+import cn.futuremove.adminportal.core.util.HtmlUtils;
 
 /**
  *

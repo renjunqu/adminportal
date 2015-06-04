@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.futuremove.adminportal.model.sys.Authority;
 
-import core.support.ExtJSBaseParameter;
+import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
 
 /**
  *

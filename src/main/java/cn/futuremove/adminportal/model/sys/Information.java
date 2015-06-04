@@ -29,7 +29,7 @@ import org.hibernate.search.annotations.Store;
 
 import com.google.common.base.Objects;
 
-import core.support.DateTimeSerializer;
+import cn.futuremove.adminportal.core.support.DateTimeSerializer;
 
 /**
  *

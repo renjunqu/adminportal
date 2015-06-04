@@ -18,8 +18,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.google.common.base.Objects;
 
-import core.support.DateSerializer;
-import core.support.DateTimeSerializer;
+import cn.futuremove.adminportal.core.support.DateSerializer;
+import cn.futuremove.adminportal.core.support.DateTimeSerializer;
 
 /**
  *

@@ -7,7 +7,7 @@ import cn.futuremove.adminportal.model.joyMove.JoyUsers;
 import cn.futuremove.adminportal.model.joyMove.param.UserGridParameter;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
-import core.support.JqGridPageView;
+import cn.futuremove.adminportal.core.support.JqGridPageView;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -4,7 +4,7 @@ import cn.futuremove.adminportal.dao.sys.DictDao;
 import cn.futuremove.adminportal.model.sys.Dict;
 import org.springframework.stereotype.Repository;
 
-import core.dao.BaseDao;
+import cn.futuremove.adminportal.core.dao.BaseDao;
 
 /**
  *

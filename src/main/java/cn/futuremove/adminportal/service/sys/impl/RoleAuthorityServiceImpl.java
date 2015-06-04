@@ -7,7 +7,7 @@ import cn.futuremove.adminportal.model.sys.RoleAuthority;
 import cn.futuremove.adminportal.service.sys.RoleAuthorityService;
 import org.springframework.stereotype.Service;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

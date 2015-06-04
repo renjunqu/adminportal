@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import cn.futuremove.adminportal.dao.sys.MailDao;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

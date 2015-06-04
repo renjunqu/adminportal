@@ -33,7 +33,7 @@ import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
 import cn.futuremove.adminportal.model.sys.Attachment;
 import cn.futuremove.adminportal.model.sys.SysUser;
 
-import core.util.JavaEEFrameworkUtils;
+import cn.futuremove.adminportal.core.util.JavaEEFrameworkUtils;
 
 /**
  *

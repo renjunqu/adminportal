@@ -11,7 +11,7 @@ import cn.futuremove.adminportal.service.sys.DepartmentService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

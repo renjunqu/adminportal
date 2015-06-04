@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import cn.futuremove.adminportal.model.sys.Attachment;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

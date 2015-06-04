@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import cn.futuremove.adminportal.model.sys.Authority;
 
-import core.service.Service;
+import cn.futuremove.adminportal.core.service.Service;
 
 /**
  *

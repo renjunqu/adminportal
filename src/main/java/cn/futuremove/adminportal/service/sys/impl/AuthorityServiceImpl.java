@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import cn.futuremove.adminportal.model.sys.Authority;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

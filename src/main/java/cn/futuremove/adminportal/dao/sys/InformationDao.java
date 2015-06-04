@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.futuremove.adminportal.model.sys.Information;
 
-import core.dao.Dao;
+import cn.futuremove.adminportal.core.dao.Dao;
 
 /**
  *

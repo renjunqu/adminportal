@@ -1,6 +1,6 @@
 package cn.futuremove.adminportal.model.sys.param;
 
-import core.support.ExtJSBaseParameter;
+import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
 
 /**
  *

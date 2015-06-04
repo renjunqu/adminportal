@@ -8,7 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
-import core.dao.BaseDao;
+import cn.futuremove.adminportal.core.dao.BaseDao;
 
 /**
  *
@@ -25,7 +25,7 @@ public class AttachmentDaoImpl extends BaseDao<Attachment> implements Attachment
 	public List<Object[]> queryFlowerList(String epcId) {
 		Query query = this.getSession().createSQLQuery(
 				"select ft.name,group_concat(a.file_path),ft.description,f.epc_id from um_type ft inner join jeefw f on ft.id=f.type_id left join attachment a on a.umtype_id=ft.id where f.epc_id=? group by a.file_name");
-		query.setParameter(0, epcId);
+			query.setParameter(0,epcId);
 		return query.list();
 	}
 

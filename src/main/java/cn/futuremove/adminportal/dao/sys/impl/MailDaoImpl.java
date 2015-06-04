@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import cn.futuremove.adminportal.dao.sys.MailDao;
 import cn.futuremove.adminportal.model.sys.Mail;
 
-import core.dao.BaseDao;
+import cn.futuremove.adminportal.core.dao.BaseDao;
 
 /**
  *

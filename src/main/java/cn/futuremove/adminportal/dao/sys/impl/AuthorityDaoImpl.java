@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import cn.futuremove.adminportal.model.sys.Authority;
 
-import core.dao.BaseDao;
+import cn.futuremove.adminportal.core.dao.BaseDao;
 
 /**
  *

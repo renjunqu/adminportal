@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.futuremove.adminportal.model.sys.Attachment;
 
-import core.service.Service;
+import cn.futuremove.adminportal.core.service.Service;
 
 /**
  *

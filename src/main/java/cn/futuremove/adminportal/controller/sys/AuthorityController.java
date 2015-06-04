@@ -28,9 +28,9 @@ import cn.futuremove.adminportal.model.sys.Authority;
 import cn.futuremove.adminportal.model.sys.RoleAuthority;
 import cn.futuremove.adminportal.service.sys.AuthorityService;
 
-import core.support.ExtJSBaseParameter;
-import core.support.JqGridPageView;
-import core.support.QueryResult;
+import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
+import cn.futuremove.adminportal.core.support.JqGridPageView;
+import cn.futuremove.adminportal.core.support.QueryResult;
 
 /**
  *

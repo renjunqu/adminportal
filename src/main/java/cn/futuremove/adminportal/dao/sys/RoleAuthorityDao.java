@@ -2,7 +2,7 @@ package cn.futuremove.adminportal.dao.sys;
 
 import cn.futuremove.adminportal.model.sys.RoleAuthority;
 
-import core.dao.Dao;
+import cn.futuremove.adminportal.core.dao.Dao;
 
 /**
  *

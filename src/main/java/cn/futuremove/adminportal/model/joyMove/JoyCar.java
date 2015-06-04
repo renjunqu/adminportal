@@ -1,6 +1,6 @@
 package cn.futuremove.adminportal.model.joyMove;
 
-import core.support.ExtJSBaseParameter;
+import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;
 
 public class JoyCar extends ExtJSBaseParameter {
 

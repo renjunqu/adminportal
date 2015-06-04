@@ -10,7 +10,7 @@ import cn.futuremove.adminportal.model.sys.Dict;
 import cn.futuremove.adminportal.service.sys.DictService;
 import org.springframework.stereotype.Service;
 
-import core.service.BaseService;
+import cn.futuremove.adminportal.core.service.BaseService;
 
 /**
  *

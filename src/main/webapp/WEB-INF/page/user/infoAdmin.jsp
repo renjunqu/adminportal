@@ -41,21 +41,21 @@
 
     function showUserWin(record){
         var id = record.get("id");
-        var mobileno = record.get("mobileno");
+        var mobileNo = record.get("mobileNo");
         var username = record.get("username");
         var gender = record.get("gender");
         var addr = record.get("addr");
         var age = record.get("age");
         var email = record.get("email");
-        var homeaddr = record.get("homeaddr");
-        var corpaddr = record.get("corpaddr");
+        var homeAddr = record.get("homeAddr");
+        var corpAddr = record.get("corpAddr");
         this.getFormPanel = function(){
             var formFields = new Array();
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '手机号码',
-                id:'mobileno',
-                name: 'mobileno',
-                value:mobileno
+                id:'mobileNo',
+                name: 'mobileNo',
+                value:mobileNo
                 ,readOnly : true
             });
             formFields[formFields.length] = new Ext.form.TextField({
@@ -72,8 +72,8 @@
                 value:email
                 ,readOnly : true
             });
-            var authenticateid = record.get("authenticateid");
-            var authenticatedriver = record.get("authenticatedriver");
+            var authenticateId = record.get("authenticateId");
+            var authenticateDriver = record.get("authenticateDriver");
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '性别',
                 format:'Y-m-d',
@@ -98,31 +98,31 @@
             });
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '审批状态',
-                id:'authenticateid',
-                name: 'authenticateid',
-                value:authenticateid
+                id:'authenticateId',
+                name: 'authenticateId',
+                value:authenticateId
                 ,readOnly : true
             });
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '驾照号码',
                 format:'Y-m-d',
-                id:'authenticatedriver',
-                name: 'authenticatedriver',
-                value:authenticatedriver
+                id:'authenticateDriver',
+                name: 'authenticateDriver',
+                value:authenticateDriver
                 ,readOnly : true
             });
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '家庭住址',
-                id:'homeaddr',
-                name: 'homeaddr',
-                value:homeaddr
+                id:'homeAddr',
+                name: 'homeAddr',
+                value:homeAddr
                 ,readOnly : true
             });
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '公司住址',
-                id:'corpaddr',
-                name: 'corpaddr',
-                value:corpaddr
+                id:'corpAddr',
+                name: 'corpAddr',
+                value:corpAddr
                 ,readOnly : true
             });
 
@@ -131,7 +131,7 @@
                 height: 200, //图片高度
                 autoEl: {
                     tag: 'img',    //指定为img标签
-                    src: '/servlet/driverLicenseImg?type=1&MobileNo='+mobileno    //指定url路径
+                    src: '/servlet/driverLicenseImg?type=1&MobileNo='+mobileNo    //指定url路径
                 }
             });
             formFields[formFields.length] = new Ext.BoxComponent({
@@ -139,7 +139,7 @@
                 height: 200, //图片高度
                 autoEl: {
                     tag: 'img',    //指定为img标签
-                    src: '/servlet/driverLicenseImg?type=2&MobileNo='+mobileno    //指定url路径
+                    src: '/servlet/driverLicenseImg?type=2&MobileNo='+mobileNo    //指定url路径
                 }
             });
             formFields[formFields.length] = new Ext.BoxComponent({
@@ -147,7 +147,7 @@
                 height: 200, //图片高度
                 autoEl: {
                     tag: 'img',    //指定为img标签
-                    src: '/servlet/idImg?type=1&MobileNo='+mobileno   //指定url路径
+                    src: '/servlet/idImg?type=1&MobileNo='+mobileNo   //指定url路径
                 }
             });
             formFields[formFields.length] = new Ext.BoxComponent({
@@ -155,7 +155,7 @@
                 height: 200, //图片高度
                 autoEl: {
                     tag: 'img',    //指定为img标签
-                    src: '/servlet/idImg?type=2&MobileNo='+mobileno   //指定url路径
+                    src: '/servlet/idImg?type=2&MobileNo='+mobileNo   //指定url路径
                 }
             });
 
@@ -220,27 +220,27 @@
                 url: '/userAdmin/order/ext/store',
                 root: 'root',
                 totalProperty: 'total',
-//                fields: ["id","mobileno", "carid","starttime","stoptime", "delmark","rentstatus"
-//                    ,"type", "batonmode", "state", "carvinnum", "destination"]          //传入需要显示的字段
+//                fields: ["id","mobileNo", "carId","startTime","stopTime", "delMark","rentstatus"
+//                    ,"type", "batonMode", "state", "carVinnum", "destination"]          //传入需要显示的字段
 
                 fields: ["id"
-                    , "mobileno","carid","starttime", "stoptime"
-                    ,"rentstatus","delmark", "batonmode","state", "carvinnum","destination"
+                    , "mobileNo","carId","startTime", "stopTime"
+                    ,"rentstatus","delMark", "batonMode","state", "carVinnum","destination"
                 ]
             });
 
             orderStore.on('beforeload', function (thiz, options) {
-                thiz.baseParams["mobileno"] = mobileno;
+                thiz.baseParams["mobileNo"] = mobileNo;
             });
 
             var cm = new Ext.grid.ColumnModel([
                 {header: '订单号', width: 1, dataIndex: 'id'},
-                {header: '手机号码', width: 1, dataIndex: 'mobileno'},
-                {header: '车辆ID', width: 1, dataIndex: 'carid'},
-                {header: '下单时间', width: 1, dataIndex: 'starttime'},
-                {header: '还车时间', width: 1, dataIndex: 'stoptime'},
+                {header: '手机号码', width: 1, dataIndex: 'mobileNo'},
+                {header: '车辆ID', width: 1, dataIndex: 'carId'},
+                {header: '下单时间', width: 1, dataIndex: 'startTime'},
+                {header: '还车时间', width: 1, dataIndex: 'stopTime'},
                 {header: '订单状态', width: 1, dataIndex: 'state'},
-                {header: '车辆号', width: 1, dataIndex: 'carvinnum'},
+                {header: '车辆号', width: 1, dataIndex: 'carVinnum'},
                 {header: '目的地', width: 1, dataIndex: 'destination'}
             ]);
 
@@ -288,15 +288,15 @@
             url: '/user/ext/store',
             root: 'root',
             totalProperty: 'total',
-            fields: ["id","mobileno", "username","userpwd", "email","registertime", "gender","addr"
-                , "age","failedtimes", "lockedtime","pushkey", "pushkey","authenticateid"
-                , "authenticatedriver","deposit", "homeaddr","corpaddr", "homelatitude","homelongitude"
-                , "corplatitude","corplongitude", "lastactivetime"
+            fields: ["id","mobileNo", "username","userpwd", "email","registerTime", "gender","addr"
+                , "age","failedTimes", "lockedTime","pushKey", "pushKey","authenticateId"
+                , "authenticateDriver","deposit", "homeAddr","corpAddr", "homeLatitude","homeLongitude"
+                , "corpLatitude","corpLongitude", "lastActiveTime"
             ]          //传入需要显示的字段
         });
 
         var cm = new Ext.grid.ColumnModel([
-            {header: '手机号码', width: 1, dataIndex: 'mobileno'},
+            {header: '手机号码', width: 1, dataIndex: 'mobileNo'},
             {header: '用户名', width: 1, dataIndex: 'username'},
             {header: '电子邮件', width: 1, dataIndex: 'email'},
             {header: '性别', width: 1, dataIndex: 'gender',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
@@ -310,7 +310,7 @@
             }},
             {header: '住址', width: 1, dataIndex: 'addr'},
             {header: '年龄', width: 1, dataIndex: 'age'},
-            {header: '审批状态', width: 1, dataIndex: 'authenticateid',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+            {header: '审批状态', width: 1, dataIndex: 'authenticateId',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
                     var val =  "审批通过";
                     if(value!=1){
                         val = "待审批";
@@ -318,7 +318,7 @@
                     return val;
                 }
             },
-            {header: '驾照号码', width: 1, dataIndex: 'authenticatedriver',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+            {header: '驾照号码', width: 1, dataIndex: 'authenticateDriver',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
                     var val =  "审批通过";
                     if(value!=1){
                         val = "待审批";
@@ -326,8 +326,8 @@
                     return val;
                 }
             },
-            {header: '家庭住址', width: 1, dataIndex: 'homeaddr'},
-            {header: '公司住址', width: 1, dataIndex: 'corpaddr'},
+            {header: '家庭住址', width: 1, dataIndex: 'homeAddr'},
+            {header: '公司住址', width: 1, dataIndex: 'corpAddr'},
             {   header: '操作',
                 xtype: 'actioncolumn',
                 width: 0.5,

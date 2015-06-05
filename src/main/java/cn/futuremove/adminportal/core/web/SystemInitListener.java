@@ -54,9 +54,6 @@ public class SystemInitListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent event) {
 		initConvertor();
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-		// applicationContext.xml已定时生成索引，此代码仅供测试，可删除
-		InformationService informationService = (InformationService) applicationContext.getBean("informationService");
-		informationService.indexingInformation();
 	}
 
 	public static Object getDynamicProperty(String entityName, Serializable key, String propName) {

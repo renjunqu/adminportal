@@ -4,13 +4,17 @@ import cn.futuremove.adminportal.controller.BaseController;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 import com.joymove.entity.JOYOrder;
 import com.joymove.entity.JOYUser;
+import com.joymove.service.JOYOrderService;
 import org.apache.commons.lang.StringUtils;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -22,32 +26,32 @@ import java.util.Map;
  */
 @Controller
 public class OrderController  extends BaseController {
-    @Autowired
-    JdbcTemplate jdbcTemplate_joyMove;
+    @Resource(name = "JOYOrderService")
+    private JOYOrderService joyOrderService;
+
 
     @RequestMapping(value = "/order/ext/store", method = { RequestMethod.POST, RequestMethod.GET })
-    public void modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String query = request.getParameter("query") ;
+    public @ResponseBody JSONObject modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        System.out.println("@query:"+query);
-        Integer start =Integer.valueOf( request.getParameter("start") );
-        Integer limit =Integer.valueOf(request.getParameter("limit"));
-
-        StringBuffer sqlBuffer = new StringBuffer("select * from JOY_Order ");
-        StringBuffer countSqlBuffer = new StringBuffer("select count(*) from JOY_Order");
-
-        if(!StringUtils.isBlank(query)){
-            sqlBuffer.append(" where  mobileno like '%"+query+"%' ");
-            countSqlBuffer.append(" where  mobileno like '%"+query+"%' ");
+        Integer start = Integer.valueOf(request.getParameter("start"));
+        Integer limit = Integer.valueOf(request.getParameter("limit"));
+        String mobileno = request.getParameter("mobileno");
+        Map<String,Object> likeCondition = new HashMap<String, Object>();
+        if (!StringUtils.isBlank(String.valueOf(start))) {
+            likeCondition.put("pageStart", start);
         }
-        sqlBuffer.append(" limit ").append(start).append(",").append(limit);
-        int total = jdbcTemplate_joyMove.queryForInt(countSqlBuffer.toString());
-        List<JOYOrder> joyOrderList = jdbcTemplate_joyMove.query(sqlBuffer.toString(), new SmartRowMapper<JOYOrder>(JOYOrder.class));
-
-        Map jsonMap = new HashMap();
-        jsonMap.put("root", joyOrderList);
-        jsonMap.put("total", total);
-        this.writeJSON(response,jsonMap);
-        return;
+        if (!StringUtils.isBlank(String.valueOf(limit))) {
+            likeCondition.put("pageSize", limit);
+        }
+        if (!StringUtils.isBlank(mobileno)) {
+            likeCondition.put("mobileNo", mobileno);
+        }
+        List<JOYOrder> joyOrderList = joyOrderService.getPagedOrderList(likeCondition);
+        JSONObject Reobj = new JSONObject();
+        Reobj.put("root",joyOrderList);
+        likeCondition.remove("pageStart");
+        List<JOYOrder> joyOrderAllList = joyOrderService.getPagedOrderList(likeCondition);
+        Reobj.put("total",joyOrderAllList.size());
+        return Reobj;
     }
 }

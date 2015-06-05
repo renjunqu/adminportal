@@ -1,7 +1,6 @@
 package cn.futuremove.adminportal.controller.user;
 
 import cn.futuremove.adminportal.controller.BaseController;
-import cn.futuremove.adminportal.model.joyMove.param.UserGridParameter;
 import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 import cn.futuremove.adminportal.core.support.JqGridPageView;

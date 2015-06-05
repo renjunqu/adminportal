@@ -160,11 +160,6 @@ public class CarLocationController extends BaseController {
 
 
 
-        Integer start = Integer.valueOf(request.getParameter("start"));
-        Integer limit = Integer.valueOf(request.getParameter("limit"));
-
-
-
 
         HashMap<String, Object> likeCondition = new HashMap<String, Object>();
         likeCondition.put("userPositionX", defaultX);

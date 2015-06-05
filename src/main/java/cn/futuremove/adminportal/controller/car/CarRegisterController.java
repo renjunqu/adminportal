@@ -11,10 +11,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.joymove.entity.JOYNCar;
+import com.joymove.entity.JOYOrder;
+import com.joymove.service.JOYNCarService;
+import com.joymove.service.JOYOrderService;
+import com.mongodb.util.JSON;
+import org.apache.commons.lang.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.futuremove.adminportal.util.http.*;
 
+import org.springframework.web.bind.annotation.ResponseBody;
 import sun.misc.BASE64Encoder;
 
 import cn.futuremove.adminportal.controller.BaseController;
@@ -35,45 +43,45 @@ import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 @Controller
 @RequestMapping("/carRegister")
 public class CarRegisterController  extends BaseController {
+
+	@Resource(name = "JOYNCarService")
+	private JOYNCarService joynCarService;
+
 	
 	final static Logger logger = LoggerFactory.getLogger(CarRegisterController.class);
 	
 	@RequestMapping(value = "/ext/store", method = { RequestMethod.POST, RequestMethod.GET,RequestMethod.PUT,RequestMethod.DELETE })
-	public void carRegisterStore(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody JSONObject carRegisterStore(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	
-		 StringBuffer jb = new StringBuffer();
-		 String line = null; 
-		 
-		 StringBuffer sqlQuery = null;
-		 StringBuffer countSqlQuery = null;
+		   StringBuffer jb = new StringBuffer();
+		   String line = null;
 		   String xaction = request.getParameter("xaction");
 		   JdbcTemplate jdbcTemplate = (JdbcTemplate) ApplicationContextUtil.getBean("jdbcTemplate_joyMove");
-		   
+		   Map<String,Object> likeCondition = new HashMap<String, Object>();
+		   JSONObject Reobj = new JSONObject();
+
 		   if(xaction!=null && xaction.equals("read")){
-			   Integer start =Integer.valueOf( request.getParameter("start") );
-		       Integer limit =Integer.valueOf(request.getParameter("limit"));
-		       String query = request.getParameter("query");
-		       
-		       sqlQuery = new StringBuffer("select * from JOY_NCar");
-		       
-		       countSqlQuery = new StringBuffer("select count(*) from JOY_NCar");
-		       if(query!=null && query.length()>0) {
-			    	 sqlQuery.append(" where " +query);
-			    	 countSqlQuery.append(" where " +query);
-			      }
-		       
-		       sqlQuery.append(" limit ").append(start).append(",").append(limit);
-		         int totalResult = jdbcTemplate.queryForInt(countSqlQuery.toString());
-		       List<JOYNCar> carList = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
-		       Map jsonMap = new HashMap();
-		       jsonMap.put("root", carList);
-		       jsonMap.put("total", totalResult);
-		       writeJSON(response, jsonMap);  
+			   Integer start = Integer.valueOf(request.getParameter("start"));
+			   Integer limit = Integer.valueOf(request.getParameter("limit"));
+
+			   if (!StringUtils.isBlank(String.valueOf(start))) {
+				   likeCondition.put("pageStart", start);
+			   }
+			   if (!StringUtils.isBlank(String.valueOf(limit))) {
+				   likeCondition.put("pageSize", limit);
+			   }
+
+			   List<JOYNCar> joynCarList  = joynCarService.getPagedNCarList(likeCondition);
+
+			   Reobj.put("root", joynCarList);
+			   likeCondition.remove("pageStart");
+			   List<JOYNCar> joynCarAllList =joynCarService.getPagedNCarList(likeCondition);
+			   Reobj.put("total",joynCarAllList.size());
+			   return Reobj;
 		   } else if(xaction !=null && xaction.equals("destroy")){
 			   Integer id =Integer.valueOf( request.getParameter("id") );
-			    sqlQuery = new StringBuffer("select * from  JOY_NCar where id  = ");
-				sqlQuery.append(id);
-				List<JOYNCar> carList  = jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
+			   likeCondition.put("id",id);
+			   List<JOYNCar> carList  = joynCarService.getNeededCar(likeCondition); //jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
 			   JOYNCar car = carList.get(0);
 			    //tell cloudmove
 				String cmUrl = "http://123.57.151.176:8088/cloudmove/cm/vin/delete";
@@ -81,11 +89,9 @@ public class CarRegisterController  extends BaseController {
 				String result = HttpPostUtils.post(cmUrl, cmData);
 				logger.debug("result of cloudmove is "+result);
 			   //delete it  
-			   String sql = new String("delete from JOY_NCar where id = ") + id;
-		       jdbcTemplate.execute(sql);
-		       Map jsonMap = new HashMap();
-		       jsonMap.put("result",0);
-		       writeJSON(response, jsonMap);  
+			   joynCarService.deleteNCar(car);
+		       Reobj.put("result",0);
+		       return Reobj;
 		   } else if(xaction !=null && xaction.equals("update")){
 				   String sql = new String("update JOY_NCar set ");
 				   String[] fields = new String[] {"id", "licensenum","vinnum","type","vendor","tboxnum","productdate","buydate","enginenum","terminalnum","carinfostatus","carbackstatus","mileage","restrictdate","updatetime","remarks"};

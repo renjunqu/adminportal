@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/security" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/security classpath:/org/springframework/security/config/spring-security-3.2.xsd
+    http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd">
+	<global-method-security>
+		<protect-pointcut expression="execution(* cn.futuremove.adminportal.service.AuthorityService.*(..))" access="ROLE_ADMIN,ROLE_RESTRICTED_ADMIN,ROLE_USER" />
+	</global-method-security>
+	<http pattern="/static/library/ext/ext-3.4.0/ux/fileuploadfield/css" security="none" />
+	<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/" access="permitAll" />
+		<remember-me />
+	</http>
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="user" password="password" authorities="ROLE_USER" />
+				<user name="admin" password="password" authorities="ROLE_USER,ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</b:beans>

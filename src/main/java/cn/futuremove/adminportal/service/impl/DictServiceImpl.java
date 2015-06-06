@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import cn.futuremove.adminportal.dao.DictDao;
-import cn.futuremove.adminportal.model.sys.Dict;
+import cn.futuremove.adminportal.model.Dict;
 import cn.futuremove.adminportal.service.DictService;
 import org.springframework.stereotype.Service;
 

@@ -20,7 +20,7 @@
        </bean>
 
 
-       <import resource="applicationContext.xml"/>
+
 
 
        <mvc:annotation-driven/>
@@ -32,10 +32,16 @@
 
 
 
-       <context:component-scan base-package="cn.futuremove" />
+
+
+       <import resource="applicationContext.xml"/>
        <context:component-scan base-package="com.joymove.service.impl"/>
-       <context:component-scan base-package="com.futuremove.cacheServer.service.impl"/>
+
        <context:component-scan base-package="com.futuremove.cacheServer.dao"/>
+    <context:component-scan base-package="com.futuremove.cacheServer.service.impl"/>
+       <context:component-scan base-package="cn.futuremove" />
+
+
 
 
        <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />

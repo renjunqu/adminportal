@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.futuremove.adminportal.model.Constants;
+import cn.futuremove.adminportal.util.Constants;
 import cn.futuremove.adminportal.service.AttachmentService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -35,9 +35,9 @@ import org.springframework.web.servlet.support.RequestContext;
 
 import cn.futuremove.adminportal.core.Constant;
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
-import cn.futuremove.adminportal.model.sys.Attachment;
-import cn.futuremove.adminportal.model.sys.Authority;
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.Attachment;
+import cn.futuremove.adminportal.model.Authority;
+import cn.futuremove.adminportal.model.SysUser;
 import cn.futuremove.adminportal.service.AuthorityService;
 import cn.futuremove.adminportal.service.SysUserService;
 

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import cn.futuremove.adminportal.dao.InformationDao;
-import cn.futuremove.adminportal.model.sys.Information;
+import cn.futuremove.adminportal.model.Information;
 import cn.futuremove.adminportal.service.InformationService;
 import org.springframework.stereotype.Service;
 

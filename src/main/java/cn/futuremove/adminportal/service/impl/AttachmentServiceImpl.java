@@ -8,7 +8,7 @@ import cn.futuremove.adminportal.dao.AttachmentDao;
 import cn.futuremove.adminportal.service.AttachmentService;
 import org.springframework.stereotype.Service;
 
-import cn.futuremove.adminportal.model.sys.Attachment;
+import cn.futuremove.adminportal.model.Attachment;
 
 import cn.futuremove.adminportal.core.service.BaseService;
 

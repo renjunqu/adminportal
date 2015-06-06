@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.futuremove.adminportal.core.Constant;
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
-import cn.futuremove.adminportal.model.sys.Authority;
-import cn.futuremove.adminportal.model.sys.RoleAuthority;
+import cn.futuremove.adminportal.model.Authority;
+import cn.futuremove.adminportal.model.RoleAuthority;
 import cn.futuremove.adminportal.service.AuthorityService;
 
 import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;

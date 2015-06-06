@@ -1,6 +1,6 @@
 package  cn.futuremove.adminportal.core.web;
 
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.SysUser;
 
 /**
  *

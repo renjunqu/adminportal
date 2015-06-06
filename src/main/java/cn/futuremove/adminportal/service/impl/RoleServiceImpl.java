@@ -2,7 +2,7 @@ package cn.futuremove.adminportal.service.impl;
 
 import javax.annotation.Resource;
 
-import cn.futuremove.adminportal.model.sys.Role;
+import cn.futuremove.adminportal.model.Role;
 import org.springframework.stereotype.Service;
 
 import cn.futuremove.adminportal.dao.RoleDao;

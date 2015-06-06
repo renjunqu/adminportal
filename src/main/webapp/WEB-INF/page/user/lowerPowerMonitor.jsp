@@ -104,8 +104,13 @@ var markerArray = new Array();
 
     map.setZoom(20);
 
-    window.setInterval(function(){
-      loadCarByCenterPosition(map);
+startRefreshCar = false;
+refreshIntervalId =  window.setInterval(function(){
+	if(window.location.hash != "#page/user/lowerPowerMonitor"){
+              clearInterval(refreshIntervalId);	
+	} else if(startRefreshCar) {
+	      loadCarByCenterPosition(map);
+       }
     },5000);
 
     Ext.onReady(mapGridInit);
@@ -119,8 +124,9 @@ var markerArray = new Array();
       var obj = json[i];
       var x = obj.longitude;
       var y = obj.latitude;
+	  console.log("hello world");
 
-console.log("@x:"+x+"    @y:"+y);
+        console.log("@x:"+x+"    @y:"+y);
 
 //      longitude":116.511016,"latitude":39.896615
 
@@ -146,9 +152,9 @@ console.log("@x:"+x+"    @y:"+y);
         position: new AMap.LngLat(x, y),
         content: controlUI,
 
-//          draggable:true, //点标记可拖拽
-//          cursor:'move',  //鼠标悬停点标记时的鼠标样式
-//          raiseOnDrag:true//鼠标拖拽点标记时开启点标记离开地图的效果
+          draggable:true, //点标记可拖拽
+          cursor:'move',  //鼠标悬停点标记时的鼠标样式
+          raiseOnDrag:true//鼠标拖拽点标记时开启点标记离开地图的效果
       });
       markerArray[markerArray.length]=marker;
       marker.setMap(map);  //在地图上添加点
@@ -158,17 +164,20 @@ console.log("@x:"+x+"    @y:"+y);
 
   }
 
+  var jsonCarStore = {root:[],total:0};
 
   function loadCarByCenterPosition(map){
-
+    startRefreshCar = true;
     var centerMap = map.getCenter();
+    console.log("called lat is "+centerMap.lat);
+    console.log("called lgn is "+centerMap.lng);
     Ext.Ajax.request({
 //        url: '/car/loadByCenter',
       url: '/car/loadByCenter/withFilter',
       method: 'POST',
       params:{
-        lat:centerMap.lat
-        ,lng:centerMap.lng
+          start:0
+          , offset:20
         ,powerAlarmFlag:checkBoxAlarm.getValue()
         ,outOfRangeFlag:checkBox.getValue()
         ,state:stateCombo.getValue()
@@ -179,9 +188,9 @@ console.log("@x:"+x+"    @y:"+y);
         //clean
         oldMarkerArray = markerArray;
         markerArray = new Array();
-
-        var json = eval('(' + result.responseText + ')');
-        renderCarByJson(json,map);
+        jsonCarStore = eval('(' + result.responseText + ')');
+        renderCarByJson(jsonCarStore.root,map);
+	carStore.loadData(jsonCarStore);
 
 
         for(i=0;i<oldMarkerArray.length;i++){
@@ -190,12 +199,17 @@ console.log("@x:"+x+"    @y:"+y);
         }
       },
       failure: function (result, request) {
-//        Ext.MessageBox.alert('系统提示', '系统繁忙。');
-
+           console.log(result);
+           console.log(request);
       }
     });
 
   }
+    var carStore = new Ext.data.JsonStore({
+     idProperty:"vinNum",
+     root:"root",
+     fields: ["owner","latitude", "state","vinNum","longitude"]
+    });
 
 
   var stateCombo, checkBox, checkBoxAlarm,searchTextField;
@@ -256,15 +270,6 @@ console.log("@x:"+x+"    @y:"+y);
       fieldLabel: '搜索'
     });
 
-    store2 = new Ext.data.JsonStore({
-      url: '/car/ext/store',
-      root: 'root',
-      totalProperty: 'total',
-//      fields: ["id", "positionx", "positiony", "state", "desp", "mobileno"]
-      fields: ["vinNum", "longitude", "latitude", "desLongitude", "desLatitude"
-        , "version", "owner", "state"
-      ]
-    });
 
 
 
@@ -272,9 +277,6 @@ console.log("@x:"+x+"    @y:"+y);
       {header: 'vinNum', width: 1, dataIndex: 'vinNum'},
       {header: 'longitude', width: 1, dataIndex: 'longitude'},
       {header: 'latitude', width: 1, dataIndex: 'latitude'},
-      {header: 'desLongitude', width: 1, dataIndex: 'desLongitude'},
-      {header: 'desLatitude', width: 1, dataIndex: 'desLatitude'},
-      {header: 'version', width: 1, dataIndex: 'version'},
       {header: 'owner', width: 1, dataIndex: 'owner'},
       {header: 'state', width: 1, dataIndex: 'state'},
       {
@@ -286,8 +288,7 @@ console.log("@x:"+x+"    @y:"+y);
             icon: '/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
             tooltip: '查看',
             handler: function (grid, rowIndex, colIndex) {
-              var record = store2.getAt(rowIndex);
-              console.log("===============");
+              var record = carStore.getAt(rowIndex);
               var x = record.get('longitude');
               var y = record.get('latitude');
               var id = record.get('vinNum');
@@ -295,7 +296,6 @@ console.log("@x:"+x+"    @y:"+y);
               map.setCenter(new AMap.LngLat(x, y));
               $('.car').css("background-color","transparent");
               $('#'+currentCarId).css("background-color","yellow");
-              loadCarByCenterPosition(map);
             }
           }
         ]
@@ -308,7 +308,7 @@ console.log("@x:"+x+"    @y:"+y);
         {
           text: '搜索',
           handler: function() {
-            store2.reload(store2.lastOptions);
+              loadCarByCenterPosition(map);
           }
         },'-',stateCombo,'->',checkBoxAlarm,
         checkBox
@@ -324,30 +324,19 @@ console.log("@x:"+x+"    @y:"+y);
       height:300,
       autoScroll: true,
       title: "车辆信息管理",
-      store: store2,
+      store: carStore,
       cm: cm,
       bbar: new Ext.PagingToolbar({
         pageSize: 20,
-        store: store2,
+        store: carStore,
         displayInfo: true,
         emptyMsg: "没有记录"
       })
     });
+    //first time add the data
+    loadCarByCenterPosition(map);
     grid.render("gridPanel");
 
-    store2.on("beforeload", function(thiz, options) {
-      thiz.baseParams["powerAlarmFlag"] = checkBoxAlarm.getValue();
-      thiz.baseParams["outOfRangeFlag"] = checkBox.getValue();
-      thiz.baseParams["state"] = stateCombo.getValue();
-      thiz.baseParams["filterText"] =searchTextField.getValue();
-    });
-
-    store2.load({params: {start: 0, limit: 20}});
-
-
-      window.setInterval(function(){
-          store2.reload(store2.lastOptions);
-      },5000);
   };
 
 </script>

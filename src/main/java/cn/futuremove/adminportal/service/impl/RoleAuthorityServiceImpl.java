@@ -3,7 +3,7 @@ package cn.futuremove.adminportal.service.impl;
 import javax.annotation.Resource;
 
 import cn.futuremove.adminportal.dao.RoleAuthorityDao;
-import cn.futuremove.adminportal.model.sys.RoleAuthority;
+import cn.futuremove.adminportal.model.RoleAuthority;
 import cn.futuremove.adminportal.service.RoleAuthorityService;
 import org.springframework.stereotype.Service;
 

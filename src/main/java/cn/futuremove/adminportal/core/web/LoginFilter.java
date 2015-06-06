@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.futuremove.adminportal.core.Constant;
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.SysUser;
 
 /**
  *

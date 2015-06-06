@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.futuremove.adminportal.core.Constant;
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
-import cn.futuremove.adminportal.model.sys.Department;
+import cn.futuremove.adminportal.model.Department;
 import cn.futuremove.adminportal.service.DepartmentService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

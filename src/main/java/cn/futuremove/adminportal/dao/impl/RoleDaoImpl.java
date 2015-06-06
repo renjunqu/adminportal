@@ -1,7 +1,7 @@
 package cn.futuremove.adminportal.dao.impl;
 
 import cn.futuremove.adminportal.dao.RoleDao;
-import cn.futuremove.adminportal.model.sys.Role;
+import cn.futuremove.adminportal.model.Role;
 import org.springframework.stereotype.Repository;
 
 import cn.futuremove.adminportal.core.dao.BaseDao;

@@ -2,7 +2,7 @@ package cn.futuremove.adminportal.service.impl;
 
 import javax.annotation.Resource;
 
-import cn.futuremove.adminportal.model.sys.Mail;
+import cn.futuremove.adminportal.model.Mail;
 import cn.futuremove.adminportal.service.MailService;
 import org.springframework.stereotype.Service;
 

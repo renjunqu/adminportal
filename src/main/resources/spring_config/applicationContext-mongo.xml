@@ -24,7 +24,6 @@
 		<property name="mapPackages">
 			<array>
 				<value>com.futuremove.cacheServer.entity</value>
-				<value>com.futuremove.cacheServer.entity.event</value>
 			</array>
 		</property>
 	</bean>

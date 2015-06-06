@@ -2,7 +2,7 @@ package cn.futuremove.adminportal.service;
 
 import java.util.List;
 
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.SysUser;
 
 import cn.futuremove.adminportal.core.service.Service;
 

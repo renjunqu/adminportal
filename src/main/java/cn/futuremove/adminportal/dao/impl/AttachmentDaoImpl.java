@@ -3,7 +3,7 @@ package cn.futuremove.adminportal.dao.impl;
 import java.util.List;
 
 import cn.futuremove.adminportal.dao.AttachmentDao;
-import cn.futuremove.adminportal.model.sys.Attachment;
+import cn.futuremove.adminportal.model.Attachment;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package cn.futuremove.adminportal.dao;
 
-import cn.futuremove.adminportal.model.sys.Department;
+import cn.futuremove.adminportal.model.Department;
 
 import cn.futuremove.adminportal.core.dao.Dao;
 

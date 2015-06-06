@@ -2,7 +2,7 @@ package cn.futuremove.adminportal.service;
 
 import java.util.List;
 
-import cn.futuremove.adminportal.model.sys.Attachment;
+import cn.futuremove.adminportal.model.Attachment;
 
 import cn.futuremove.adminportal.core.service.Service;
 

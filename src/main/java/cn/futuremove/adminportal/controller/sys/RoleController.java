@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.futuremove.adminportal.model.sys.Role;
+import cn.futuremove.adminportal.model.Role;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

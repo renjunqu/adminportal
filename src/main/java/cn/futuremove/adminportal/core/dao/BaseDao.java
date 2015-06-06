@@ -186,7 +186,7 @@ public class BaseDao<E> implements Dao<E> {
     }
 
     public E getByProerties(String[] propName, Object[] propValue) {
-        return this.getByProerties((String[])propName, (Object[])propValue, (Map)null);
+        return (E)this.getByProerties((String[])propName, (Object[])propValue, (Map)null);
     }
 
     public E getByProerties(String propName, Object propValue) {

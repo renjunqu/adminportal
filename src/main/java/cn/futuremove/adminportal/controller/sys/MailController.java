@@ -13,7 +13,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.futuremove.adminportal.model.sys.Mail;
+import cn.futuremove.adminportal.model.Mail;
 import cn.futuremove.adminportal.service.AttachmentService;
 import cn.futuremove.adminportal.service.MailService;
 import org.apache.commons.lang.StringUtils;
@@ -30,8 +30,8 @@ import org.springframework.web.servlet.support.RequestContext;
 
 import cn.futuremove.adminportal.core.Constant;
 import cn.futuremove.adminportal.core.JavaEEFrameworkBaseController;
-import cn.futuremove.adminportal.model.sys.Attachment;
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.Attachment;
+import cn.futuremove.adminportal.model.SysUser;
 
 import cn.futuremove.adminportal.core.util.JavaEEFrameworkUtils;
 

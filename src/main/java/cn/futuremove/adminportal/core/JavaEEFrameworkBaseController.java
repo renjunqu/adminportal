@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.SysUser;
 
 import cn.futuremove.adminportal.core.controller.ExtJSBaseController;
 import cn.futuremove.adminportal.core.support.ExtJSBaseParameter;

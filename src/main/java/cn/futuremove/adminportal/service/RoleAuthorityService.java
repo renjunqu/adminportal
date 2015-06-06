@@ -1,6 +1,6 @@
 package cn.futuremove.adminportal.service;
 
-import cn.futuremove.adminportal.model.sys.RoleAuthority;
+import cn.futuremove.adminportal.model.RoleAuthority;
 
 import cn.futuremove.adminportal.core.service.Service;
 

@@ -66,8 +66,8 @@
             root: 'root',
             totalProperty: 'total',
             idProperty:'id',
-            fields: ['id', 'licensenum','vinnum','type','vendor','tboxnum','productdate','buydate','enginenum','terminalnum',
-                 'carinfostatus','carbackstatus','mileage','restrictdate','updatetime','remarks','registerstate','rsapubkey','rsaprikey'],
+            fields: ['id', 'licensenum','vinNum','type','vendor','tboxnum','productdate','buydate','enginenum','terminalnum',
+                 'carinfostatus','carbackstatus','mileage','restrictdate','updatetime','remarks','registerState','RSAPubKey','RSAPriKey'],
             writer:writer,
         });
     $.store = store;
@@ -122,7 +122,7 @@
 					xtype:'textarea',  
 					width:250 ,
 					readOnly:true,
-                                   value:record['rsapubkey'],
+                                   value:record['RSAPubKey'],
 					height:100,
                                         id:"rsaKey_pub",
                                         name:"rsaKy_pub",
@@ -142,7 +142,7 @@
 						id:"rsaKey_pri",
 						name:"rsaKey_pri",
 						xtype:'textarea',  
-                                   value:record['rsaprikey'],
+                                   value:record['RSAPriKey'],
 						width:250 ,
 						readOnly:true,
 						height:100,
@@ -253,8 +253,8 @@
 
         function showCarWin(record,rowIndex){
 		    var formFields = new Array();
-                    var columns =  ['id', 'licensenum','vinnum','type','vendor','tboxnum','productdate','buydate','enginenum','terminalnum','carinfostatus','carbackstatus','mileage','restrictdate','updatetime','remarks'];
-                    var names =  ['编号', '车牌号','vinnum','车型','供应商','T-BOX 编号','生产日期','购买日期','发动机编号','设备终端号','车辆标识是否齐全','车辆备品是否齐全','车辆续航里程','限行时间','更新时间','备注'];
+                    var columns =  ['id', 'licensenum','vinNum','type','vendor','tboxnum','productdate','buydate','enginenum','terminalnum','carinfostatus','carbackstatus','mileage','restrictdate','updatetime','remarks'];
+                    var names =  ['编号', '车牌号','vinNum','车型','供应商','T-BOX 编号','生产日期','购买日期','发动机编号','设备终端号','车辆标识是否齐全','车辆备品是否齐全','车辆续航里程','限行时间','更新时间','备注'];
 
 
 
@@ -370,7 +370,7 @@
                                         if(form.isValid()) {
                                            console.log("input is valid");
                                            var carJson = {};
-                                           var carFields =  ['id', 'licensenum','vinnum','type','vendor','tboxnum','productdate','buydate','enginenum','terminalnum','carinfostatus','carbackstatus','mileage','restrictdate','updatetime','remarks'];
+                                           var carFields =  ['id', 'licensenum','vinNum','type','vendor','tboxnum','productdate','buydate','enginenum','terminalnum','carinfostatus','carbackstatus','mileage','restrictdate','updatetime','remarks'];
                                            $(carFields).each(function(index,e){
                                                console.log("index is "+index);
                                                console.log("e is "+e);
@@ -443,11 +443,11 @@
         var cm = new Ext.grid.ColumnModel([
             {header: 'ID', width: 1, dataIndex: 'id'},
             {header: '车牌号', width: 1, dataIndex: 'licensenum'},
-            {header: 'vinnum', width: 1, dataIndex: 'vinnum'},
+            {header: 'vinNum', width: 1, dataIndex: 'vinNum'},
             {header: '类型', width: 1, dataIndex: 'type'},
             {header: 'T-BOX 编号', width: 1, dataIndex: 'tboxnum'},
-            {header: '入网状态123', width: 1, dataIndex: 'registerstate',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
-                            if(record.get('registerstate')==0) {
+            {header: '入网状态123', width: 1, dataIndex: 'registerState',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
+                            if(record.get('registerState')==0) {
                                 return "未完成";
                             } else {
                                 return "已完成";
@@ -556,9 +556,9 @@
                              if(cardespFilter!=null && cardespFilter.length>0) {
                                  $.query += " Licensenum like \'%" + cardespFilter + "%\' and"; 
                               }
-                             var vinnumFilter  = Ext.getCmp("vinnumFilter").getValue();
-                             if(vinnumFilter!=null && vinnumFilter.length>0) {
-                                 $.query += " VinNum like \'%" + vinnumFilter + "%\' and"; 
+                             var vinNumFilter  = Ext.getCmp("vinNumFilter").getValue();
+                             if(vinNumFilter!=null && vinNumFilter.length>0) {
+                                 $.query += " vinNum like \'%" + vinNumFilter + "%\' and"; 
                               }
                              var tboxFilter  = Ext.getCmp("tboxFilter").getValue();
                              if(tboxFilter!=null && tboxFilter.length>0) {
@@ -600,7 +600,7 @@
                     },
                     {
                         xtype:'label',
-                        text:"vinnum: ",
+                        text:"vinNum: ",
 			style:{
                              "padding-left":"30px",
 			     "font":"italic 12px/20px arial,sans-serif"
@@ -610,8 +610,8 @@
                         xtype:'textarea',
                         height:30,
                         width:100,
-			id:"vinnumFilter",
-			name:"vinnumFilter",
+			id:"vinNumFilter",
+			name:"vinNumFilter",
                         style:{
                                marginLeft:"10px",
                                marginTop:"3px"

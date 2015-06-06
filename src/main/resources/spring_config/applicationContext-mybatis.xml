@@ -34,7 +34,7 @@
               <property name="dataSource" ref="dataSource"></property>
        </bean>
 
-       <tx:advice id="txAdvice" transaction-manager="transactionManager_sys">
+       <tx:advice id="txAdvice" transaction-manager="transactionManager">
               <tx:attributes>
                      <tx:method name="delete*" propagation="REQUIRED" read-only="false"
                                 rollback-for="java.lang.Exception"/>
@@ -79,10 +79,12 @@
               <aop:pointcut id="retry_redis_access"
                             expression="execution(* com.joymove.redis.*.*(..))" />
 
-              <aop:advisor pointcut-ref="pc" advice-ref="retryAdvice" order="0"/>
+
 
               <aop:advisor pointcut-ref="pc" advice-ref="txAdvice" order="1"/>
 
+
+              <aop:advisor pointcut-ref="pc" advice-ref="retryAdvice" order="0"/>
 
               <aop:advisor pointcut-ref="retry_car_update_state"
                            advice-ref="retryAdvice"/>
@@ -91,9 +93,7 @@
               <aop:advisor pointcut-ref="retry_redis_access"
                            advice-ref="retryAdvice"/>
 
-
        </aop:config>
-
 
 
 

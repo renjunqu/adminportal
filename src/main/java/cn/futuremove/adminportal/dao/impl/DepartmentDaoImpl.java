@@ -3,7 +3,7 @@ package cn.futuremove.adminportal.dao.impl;
 import cn.futuremove.adminportal.dao.DepartmentDao;
 import org.springframework.stereotype.Repository;
 
-import cn.futuremove.adminportal.model.sys.Department;
+import cn.futuremove.adminportal.model.Department;
 
 import cn.futuremove.adminportal.core.dao.BaseDao;
 

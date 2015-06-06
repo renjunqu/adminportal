@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import cn.futuremove.adminportal.dao.AttachmentDao;
 import cn.futuremove.adminportal.dao.SysUserDao;
-import cn.futuremove.adminportal.model.sys.Attachment;
-import cn.futuremove.adminportal.model.sys.Department;
-import cn.futuremove.adminportal.model.sys.SysUser;
+import cn.futuremove.adminportal.model.Attachment;
+import cn.futuremove.adminportal.model.Department;
+import cn.futuremove.adminportal.model.SysUser;
 
 import cn.futuremove.adminportal.core.service.BaseService;
 

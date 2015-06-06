@@ -7,11 +7,11 @@ import javax.annotation.Resource;
 
 import cn.futuremove.adminportal.dao.AuthorityDao;
 import cn.futuremove.adminportal.dao.RoleAuthorityDao;
-import cn.futuremove.adminportal.model.sys.RoleAuthority;
+import cn.futuremove.adminportal.model.RoleAuthority;
 import cn.futuremove.adminportal.service.AuthorityService;
 import org.springframework.stereotype.Service;
 
-import cn.futuremove.adminportal.model.sys.Authority;
+import cn.futuremove.adminportal.model.Authority;
 
 import cn.futuremove.adminportal.core.service.BaseService;
 

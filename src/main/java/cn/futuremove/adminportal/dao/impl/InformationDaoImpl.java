@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.futuremove.adminportal.dao.InformationDao;
-import cn.futuremove.adminportal.model.sys.Information;
+import cn.futuremove.adminportal.model.Information;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;

@@ -83,45 +83,62 @@
 <script type="text/javascript">
 
 
+
+  function initAMapContainer(){
+	    var width = $("#main-content").width();
+	    var height = $(window).height()-100;
+
+	    $('#mapContainer').width(width);
+	    $('#mapContainer').height(height);
+
+	    map = new AMap.Map('mapContainer', {
+	      resizeEnable: true,
+	      dragEnable:true,
+	      zoomEnable:true
+	    });
+
+	    map.setZoom(20);
+
+	startRefreshCar = false;
+	refreshIntervalId =  window.setInterval(function(){
+		if(window.location.hash != "#page/user/lowerPowerMonitor"){
+		      clearInterval(refreshIntervalId);	
+		} else if(startRefreshCar) {
+		      carStore.load(carStore.lastOptions);
+	       }
+	    },5000);
+
+	Ext.onReady(mapGridInit);
+  }
+
   var map;
   var currentCarId;
-var markerArray = new Array();
-
-  var oldMarkerArray = new Array();
-  var scripts = ["http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"];
-  $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
-    var width = $("#main-content").width();
-    var height = $(window).height()-100;
-
-    $('#mapContainer').width(width);
-    $('#mapContainer').height(height);
-
-    map = new AMap.Map('mapContainer', {
-      resizeEnable: true,
-      dragEnable:true,
-      zoomEnable:true
-    });
-
-    map.setZoom(20);
-
-startRefreshCar = false;
-refreshIntervalId =  window.setInterval(function(){
-	if(window.location.hash != "#page/user/lowerPowerMonitor"){
-              clearInterval(refreshIntervalId);	
-	} else if(startRefreshCar) {
-	      loadCarByCenterPosition(map);
-       }
-    },5000);
-
-    Ext.onReady(mapGridInit);
-
-  });
+  var markerArray = new Array();
+  //防止载入多次
+  if(typeof loadedAMap=='undefined')
+      loadedAMap = false;
+  if(loadedAMap==false) {
+                  var scripts = ["http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"];
+		  $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+		   loadedAMap = true;
+                   initAMapContainer();
+	          });
+  } else {
+		    var scripts = [];
+		    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+						      initAMapContainer();
+		    });
+  }
 
 
-  function renderCarByJson(json,map){
+  function renderCarByJson(map){
+    for(i = 0;i<markerArray.length;i++)
+	    markerArray[i].setMap(null);
+    markerArray = [];
+    startRefreshCar = true;
     var centerMap = map.getCenter();
-    for (var i = 0; i < json.length ; i++) {
-      var obj = json[i];
+    for (var i = 0; i < carStore.data.length ; i++) {
+      var obj = carStore.getAt(i).data;
       var x = obj.longitude;
       var y = obj.latitude;
 	  console.log("hello world");
@@ -166,49 +183,17 @@ refreshIntervalId =  window.setInterval(function(){
 
   var jsonCarStore = {root:[],total:0};
 
-  function loadCarByCenterPosition(map){
-    startRefreshCar = true;
-    var centerMap = map.getCenter();
-    console.log("called lat is "+centerMap.lat);
-    console.log("called lgn is "+centerMap.lng);
-    Ext.Ajax.request({
-//        url: '/car/loadByCenter',
-      url: '/car/loadByCenter/withFilter',
-      method: 'POST',
-      params:{
-          start:0
-          , offset:20
-        ,powerAlarmFlag:checkBoxAlarm.getValue()
-        ,outOfRangeFlag:checkBox.getValue()
-        ,state:stateCombo.getValue()
-        ,filterText:searchTextField.getValue()
-      },
-      text: "Updating...",
-      success: function (result, request) {
-        //clean
-        oldMarkerArray = markerArray;
-        markerArray = new Array();
-        jsonCarStore = eval('(' + result.responseText + ')');
-        renderCarByJson(jsonCarStore.root,map);
-	carStore.loadData(jsonCarStore);
 
-
-        for(i=0;i<oldMarkerArray.length;i++){
-          var marker = oldMarkerArray[i];
-          marker.setMap(null);
-        }
-      },
-      failure: function (result, request) {
-           console.log(result);
-           console.log(request);
-      }
-    });
-
-  }
-    var carStore = new Ext.data.JsonStore({
+  carStore = new Ext.data.JsonStore({
+     url:"/car/loadByCenter/withFilter",
      idProperty:"vinNum",
      root:"root",
-     fields: ["owner","latitude", "state","vinNum","longitude"]
+     fields: ["owner","latitude", "state","vinNum","longitude"],
+     listeners:{
+          "datachanged":function(store){
+                    renderCarByJson(map);
+	  } 
+     }
     });
 
 
@@ -275,10 +260,29 @@ refreshIntervalId =  window.setInterval(function(){
 
     var cm = new Ext.grid.ColumnModel([
       {header: 'vinNum', width: 1, dataIndex: 'vinNum'},
-      {header: 'longitude', width: 1, dataIndex: 'longitude'},
-      {header: 'latitude', width: 1, dataIndex: 'latitude'},
-      {header: 'owner', width: 1, dataIndex: 'owner'},
-      {header: 'state', width: 1, dataIndex: 'state'},
+      {header: '使用者', width: 1, dataIndex: 'owner'},
+      {header: '车辆状态', width: 1, dataIndex: 'state',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
+                            if(record.get('state')==0) {
+                                return "空闲";
+			    } else if(record.get('state')==1) {
+                                return "被预定";
+			    } else if(record.get('state')==2) {
+                                return "被租用";
+			    } else if(record.get('state')==3) {
+			        return "等待授权码下发";
+			    } else if(record.get('state')==4) {
+			        return "等待预定成功";
+			    } else if(record.get('state')==5) {
+			        return "等待点火成功";
+			    } else if(record.get('state')==6) {
+			        return "等待熄火成功";
+			    } else if(record.get('state')==7) {
+			        return "等待锁车成功";
+			    } else if(record.get('state')==8) {
+			        return "等待清除授权码成功";
+			   }
+
+      }},
       {
         header: '操作',
         xtype: 'actioncolumn',
@@ -308,16 +312,15 @@ refreshIntervalId =  window.setInterval(function(){
         {
           text: '搜索',
           handler: function() {
-              loadCarByCenterPosition(map);
+              carStore.load(carStore.lastOptions);
           }
         },'-',stateCombo,'->',checkBoxAlarm,
         checkBox
 
       ]
     });
-    var grid = new Ext.grid.GridPanel({
+  carGrid = new Ext.grid.GridPanel({
       viewConfig: {forceFit: true},
-//            height:$(window).height(),
       tbar: toolbar,
       collapsible: true,
       collapsed:true,
@@ -327,16 +330,15 @@ refreshIntervalId =  window.setInterval(function(){
       store: carStore,
       cm: cm,
       bbar: new Ext.PagingToolbar({
-        pageSize: 20,
+        pageSize: 5,
         store: carStore,
         displayInfo: true,
-        emptyMsg: "没有记录"
+        emptyMsg: "没有记录",
       })
     });
     //first time add the data
-    loadCarByCenterPosition(map);
-    grid.render("gridPanel");
-
+    carStore.load({params: {start: 0, limit:5}});
+    carGrid.render("gridPanel");
   };
 
 </script>

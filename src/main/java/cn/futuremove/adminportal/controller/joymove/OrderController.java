@@ -32,26 +32,30 @@ public class OrderController {
 
     @RequestMapping(value = "/order/ext/store", method = { RequestMethod.POST, RequestMethod.GET })
     public @ResponseBody JSONObject modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        Integer start = Integer.valueOf(request.getParameter("start"));
-        Integer limit = Integer.valueOf(request.getParameter("limit"));
-        String mobileno = request.getParameter("mobileno");
-        Map<String,Object> likeCondition = new HashMap<String, Object>();
-        if (!StringUtils.isBlank(String.valueOf(start))) {
-            likeCondition.put("pageStart", start);
-        }
-        if (!StringUtils.isBlank(String.valueOf(limit))) {
-            likeCondition.put("pageSize", limit);
-        }
-        if (!StringUtils.isBlank(mobileno)) {
-            likeCondition.put("mobileNo", mobileno);
-        }
-        List<JOYOrder> joyOrderList = joyOrderService.getPagedOrderList(likeCondition);
         JSONObject Reobj = new JSONObject();
-        Reobj.put("root",joyOrderList);
-        likeCondition.remove("pageStart");
-        List<JOYOrder> joyOrderAllList = joyOrderService.getPagedOrderList(likeCondition);
-        Reobj.put("total",joyOrderAllList.size());
-        return Reobj;
+        try {
+            Integer start = Integer.valueOf(request.getParameter("start"));
+            Integer limit = Integer.valueOf(request.getParameter("limit"));
+            String mobileno = request.getParameter("mobileno");
+            Map<String, Object> likeCondition = new HashMap<String, Object>();
+            if (!StringUtils.isBlank(String.valueOf(start))) {
+                likeCondition.put("pageStart", start);
+            }
+            if (!StringUtils.isBlank(String.valueOf(limit))) {
+                likeCondition.put("pageSize", limit);
+            }
+            if (!StringUtils.isBlank(mobileno)) {
+                likeCondition.put("mobileNo", mobileno);
+            }
+            List<JOYOrder> joyOrderList = joyOrderService.getPagedOrderList(likeCondition);
+            Reobj.put("root", joyOrderList);
+            likeCondition.remove("pageStart");
+            List<JOYOrder> joyOrderAllList = joyOrderService.getPagedOrderList(likeCondition);
+            Reobj.put("total", joyOrderAllList.size());
+        } catch(Exception e) {
+             System.out.println(e);
+            e.printStackTrace();
+        }
+            return Reobj;
     }
 }

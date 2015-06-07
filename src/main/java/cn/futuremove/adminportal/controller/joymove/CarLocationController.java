@@ -37,24 +37,28 @@ public class CarLocationController {
 
     @RequestMapping(value = "/car/loadByCenter/withFilter", method = { RequestMethod.POST, RequestMethod.GET })
     public  @ResponseBody JSONObject loadByCenterWithSessionFilter(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<Car> carList = new ArrayList<Car>();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        List<Car> carPagedList = new ArrayList<Car>();
+        List<Car> carAllList = new ArrayList<Car>();
+        //System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         try {
             Object start = request.getParameter("start");
             Object limit = request.getParameter("limit");
             Map<String,Object> likeCondition = new HashMap<String, Object>();
             likeCondition.put("start",start==null?0:String.valueOf(start));
-            likeCondition.put("limit",limit==null?0:String.valueOf(limit));
-            carList.addAll(carService.getPagedCarList(likeCondition));
+            likeCondition.put("limit",limit==null?5:String.valueOf(limit));
+            carPagedList.addAll(carService.getPagedCarList(likeCondition));
+            likeCondition.put("start", 0);
+            likeCondition.put("limit", 0);
+            carAllList.addAll(carService.getPagedCarList(likeCondition));
+
         } catch(Exception e) {
             System.out.println(e);
         }
         JSONObject Reobj  = new JSONObject();
-        Reobj.put("root",SimpleJSONUtil.listToJSONArray(carList));
-        Reobj.put("total", carList.size());
-        System.out.println("heelp" + Reobj.toJSONString());
+        Reobj.put("root",SimpleJSONUtil.listToJSONArray(carPagedList));
+        Reobj.put("total", carAllList.size());
+        //System.out.println("heelp" + Reobj.toJSONString());
         return Reobj;
-
     }
 
 

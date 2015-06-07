@@ -5,10 +5,16 @@ import cn.futuremove.adminportal.util.ApplicationContextUtil;
 import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
 import cn.futuremove.adminportal.core.support.JqGridPageView;
 import com.futuremove.cacheServer.service.CarService;
+import com.joymove.entity.JOYDriverLicense;
+import com.joymove.entity.JOYIdAuthInfo;
 import com.joymove.entity.JOYOrder;
 import com.joymove.entity.JOYUser;
+import com.joymove.service.JOYDriverLicenseService;
+import com.joymove.service.JOYIdAuthInfoService;
 import com.joymove.service.JOYOrderService;
 import com.joymove.service.JOYUserService;
+import com.joymove.util.StringUtil;
+import org.apache.taglibs.standard.tag.common.xml.IfTag;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -41,6 +48,11 @@ public class UserGridController {
 
     @Resource(name = "JOYOrderService")
     private JOYOrderService joyOrderService;
+
+    @Resource(name = "JOYIdAuthInfoService")
+    private JOYIdAuthInfoService joyIdAuthInfoService;
+    @Resource(name = "JOYDriverLicenseService")
+    private JOYDriverLicenseService joyDriverLicenseService;
 
 
 
@@ -111,22 +123,64 @@ public class UserGridController {
         return Reobj;
     }
 
+    @RequestMapping("/userAdmin/image/store")
+    public void  userImageGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            String mobileNo = String.valueOf(request.getParameter("mobileNo"));
+            String imageType = String.valueOf(request.getParameter("type"));
+            String imageDirection = String.valueOf(request.getParameter("direction"));
+            Map<String, Object> likeConditon = new HashMap<String, Object>();
+            byte[] imageData = null;
+            if (!StringUtils.isBlank(mobileNo)) {
+                likeConditon.put("mobileNo", mobileNo);
+                if (imageType.equals("driver")) {
+                    List<JOYDriverLicense> driverLicenses = joyDriverLicenseService.getDriverAuthInfo(likeConditon);
+                    JOYDriverLicense joyDriverLic = driverLicenses.get(0);
+                    if (imageDirection.equals("back")) {
+                        imageData = joyDriverLic.driverAuthInfo_back;
+                    } else {
+                        imageData = joyDriverLic.driverAuthInfo;
+                    }
+                } else if (imageType.equals("id")) {
+                    List<JOYIdAuthInfo> authInfos = joyIdAuthInfoService.getNeededIdAuthInfo(likeConditon);
+                    JOYIdAuthInfo authInfo = authInfos.get(0);
+                    if (imageDirection.equals("back")) {
+                        imageData = authInfo.idAuthInfo_back;
+                    } else {
+                        imageData = authInfo.idAuthInfo;
+                    }
+                }
+            }
+            if (imageData != null) {
+                response.setContentType("image/jpg");
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(imageData);
+                outputStream.close();
+            }
+        } catch(Exception e){
+            System.out.print(e);
+            e.printStackTrace();
+        }
+    }
+
+
     @RequestMapping("/userAdmin/approve/id")
     public void updateIdStatus(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        JdbcTemplate jdbcTemplate = (JdbcTemplate) ApplicationContextUtil.getBean("jdbcTemplate_joyMove");
-        String id = request.getParameter("id");
-        String sql = "update JOY_Users set authenticateid=1 where id=" + id;
-        jdbcTemplate.execute(sql);
-        JOYUser joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JOYUser>(JOYUser.class));
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer result = Integer.parseInt(request.getParameter("result"));
+        JOYUser user = new JOYUser();
+        user.id = id;
+        user.authenticateId = result;
+        joyUserService.updateJOYUser(user);
     }
 
     @RequestMapping("/userAdmin/approve/drive")
     public void updateDriveStatus(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        JdbcTemplate jdbcTemplate = (JdbcTemplate) ApplicationContextUtil.getBean("jdbcTemplate_joyMove");
-        String id = request.getParameter("id");
-        String sql = "update JOY_Users set authenticatedriver=1 where id=" + id;
-        jdbcTemplate.execute(sql);
-        JOYUser joyUsers = jdbcTemplate.queryForObject("select * from JOY_Users where id=" + id, new SmartRowMapper<JOYUser>(JOYUser.class));
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer result = Integer.parseInt(request.getParameter("result"));
+        JOYUser user = new JOYUser();
+        user.id = id;
+        user.authenticateDriver = result;
+        joyUserService.updateJOYUser(user);
     }
-
 }

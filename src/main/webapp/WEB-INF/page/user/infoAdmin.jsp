@@ -33,10 +33,158 @@
     }
 
 
-    var store;
+    var userStore;
 
     function reloadGrid() {
-        store.load(store.lastOptions);
+        userStore.load(userStore.lastOptions);
+    }
+
+    function authenticateUser(type,result,id,win){
+         var url = ""; 
+	    if(type=="id")
+                   url ="/userAdmin/approve/id";
+	    else 
+                   url ="/userAdmin/approve/drive";
+	    Ext.Ajax.request({
+		url: url,
+		method: 'POST',
+		params:{
+		    id:id,
+		    result:result
+		},
+		text: "Updating...",
+		success: function (result, request) {
+		    Ext.MessageBox.alert('系统提示', '审批状态修改成功。');
+		    reloadGrid();
+		    win.hide();
+		    delete win;
+		},
+		failure: function (result, request) {
+		    Ext.MessageBox.alert('系统提示', '系统繁忙。');
+		}
+	    });
+    }
+
+    function showAuthenticateIdWin(record) {
+
+        var formFields = new Array();
+        formFields[formFields.length] = new Ext.form.Label({
+			text:"身份证正面图片",
+			style:{"padding":"10px 10px"}
+        });
+        formFields[formFields.length] = new Ext.BoxComponent({
+            width: 200, //图片宽度
+            height: 200, //图片高度
+            autoEl: {
+                tag: 'img',    //指定为img标签
+                src: '/userAdmin/image/store?type=id&direction=pos&mobileNo='+ record.get('mobileNo'),    //指定url路径
+		alt:"   正在加载图片，请稍后...."
+            }
+        });
+        formFields[formFields.length] = new Ext.form.Label({
+			text:"身份证背面图片",
+			style:{"padding":"10px 10px"}
+        });
+        formFields[formFields.length] = new Ext.BoxComponent({
+            width: 200, //图片宽度
+            height: 200, //图片高度
+            autoEl: {
+                tag: 'img',    //指定为img标签
+                src: '/userAdmin/image/store?type=id&direction=back&mobileNo='+record.get('mobileNo'),    //指定url路径
+		alt:"   正在加载图片，请稍后...."
+            }
+        });
+        var authFP = new Ext.FormPanel({
+                autoHeight:true,
+                bodyStyle:"padding:10px",
+                buttonAlign: 'center',
+                items:[{
+                    layout:'form',
+                    border:false,
+                    defaults:{
+                     layout: 'form',
+		     border: false
+		    },
+                    items:getFormFieldsForColumnLayout(formFields),
+		    }]});
+        var authUserWin = new Ext.Window({
+            title: "审核用户身份信息",
+            modal: true,
+            width: 640,
+            height: 640,
+            resizable: false,
+            autoScroll: true,
+            items: [ authFP ], 
+            buttonAlign: 'center',
+	    buttons:[{
+                        text: '审批通过',
+                        formBind: true,
+                        handler: function (btn, evt) {
+				authenticateUser("id",1,record.get("id"),authUserWin);
+                        }
+                    },{
+                        text: '审批失败',
+                        formBind: true,
+                        handler: function (btn, evt) {
+				authenticateUser("id",3,record.get("id"),authUserWin);
+			}
+            }] 
+        });
+        authUserWin.show();
+    }
+    function showAuthenticateDriverWin(record) {
+
+        var formFields = new Array();
+        formFields[formFields.length] = new Ext.form.Label({
+			text:"驾照图片",
+			style:{"padding":"10px 10px"}
+        });
+        formFields[formFields.length] = new Ext.BoxComponent({
+            width: 200, //图片宽度
+            height: 200, //图片高度
+            autoEl: {
+                tag: 'img',    //指定为img标签
+                src: '/userAdmin/image/store?type=driver&direction=pos&mobileNo='+ record.get('mobileNo'),    //指定url路径
+		alt:"   正在加载图片，请稍后...."
+            }
+        });
+        var authFP = new Ext.FormPanel({
+                autoHeight:true,
+                bodyStyle:"padding:10px",
+                buttonAlign: 'center',
+                items:[{
+                    layout:'form',
+                    border:false,
+                    defaults:{
+                     layout: 'form',
+		     border: false
+		    },
+                    items:getFormFieldsForColumnLayout(formFields),
+		    }]});
+        var authDriverWin = new Ext.Window({
+            title: "审核用户驾照信息",
+            modal: true,
+            width: 640,
+            height: 320,
+            resizable: false,
+            autoScroll: true,
+            items: [ authFP ], 
+            buttonAlign: 'center',
+	    buttons:[{
+                        text: '审批通过',
+                        formBind: true,
+                        handler: function (btn, evt) {
+				authenticateUser("driver",1,record.get("id"),authDriverWin);
+                        }
+                    },{
+                        text: '审批失败',
+                        formBind: true,
+                        handler: function (btn, evt) {
+				authenticateUser("driver",3,record.get("id"),authDriverWin);
+			}
+            }] 
+        });
+        authDriverWin.show();
     }
 
     function showUserWin(record){
@@ -97,14 +245,14 @@
                 ,readOnly : true
             });
             formFields[formFields.length] = new Ext.form.TextField({
-                fieldLabel: '审批状态',
+                fieldLabel: '身份信息审批状态',
                 id:'authenticateId',
                 name: 'authenticateId',
                 value:authenticateId
                 ,readOnly : true
             });
             formFields[formFields.length] = new Ext.form.TextField({
-                fieldLabel: '驾照号码',
+                fieldLabel: '驾照信息审批状态',
                 format:'Y-m-d',
                 id:'authenticateDriver',
                 name: 'authenticateDriver',
@@ -125,40 +273,6 @@
                 value:corpAddr
                 ,readOnly : true
             });
-
-            formFields[formFields.length] = new Ext.BoxComponent({
-                width: 200, //图片宽度
-                height: 200, //图片高度
-                autoEl: {
-                    tag: 'img',    //指定为img标签
-                    src: '/servlet/driverLicenseImg?type=1&MobileNo='+mobileNo    //指定url路径
-                }
-            });
-            formFields[formFields.length] = new Ext.BoxComponent({
-                width: 200, //图片宽度
-                height: 200, //图片高度
-                autoEl: {
-                    tag: 'img',    //指定为img标签
-                    src: '/servlet/driverLicenseImg?type=2&MobileNo='+mobileNo    //指定url路径
-                }
-            });
-            formFields[formFields.length] = new Ext.BoxComponent({
-                width: 200, //图片宽度
-                height: 200, //图片高度
-                autoEl: {
-                    tag: 'img',    //指定为img标签
-                    src: '/servlet/idImg?type=1&MobileNo='+mobileNo   //指定url路径
-                }
-            });
-            formFields[formFields.length] = new Ext.BoxComponent({
-                width: 200, //图片宽度
-                height: 200, //图片高度
-                autoEl: {
-                    tag: 'img',    //指定为img标签
-                    src: '/servlet/idImg?type=2&MobileNo='+mobileNo   //指定url路径
-                }
-            });
-
             var fs = new Ext.FormPanel({
                 autoHeight:true,
                 bodyStyle:"padding:10px",
@@ -170,47 +284,6 @@
                     items:getFormFieldsForColumnLayout(formFields),
                     anchor:"95%"
                 }]
-                ,buttons:[{
-                        text: '证件审批通过',
-                        formBind: true,
-                        handler: function (btn, evt) {
-                            Ext.Ajax.request({
-                                url: '/userAdmin/approve/id',
-                                method: 'POST',
-                                params:{
-                                    id:id
-                                },
-                                text: "Updating...",
-                                success: function (result, request) {
-                                    Ext.MessageBox.alert('系统提示', '审批状态设置成功。');
-                                },
-                                failure: function (result, request) {
-                                    Ext.MessageBox.alert('系统提示', '系统繁忙。');
-                                }
-                            });
-
-                        }
-                    },{
-                        text: '驾照审批通过',
-                        formBind: true,
-                        handler: function (btn, evt) {
-                            Ext.Ajax.request({
-                                url: '/userAdmin/approve/drive',
-                                method: 'POST',
-                                params:{
-                                    id:id
-                                },
-                                text: "Updating...",
-                                success: function (result, request) {
-                                    Ext.MessageBox.alert('系统提示', '审批状态设置成功。');
-                                },
-                                failure: function (result, request) {
-                                    Ext.MessageBox.alert('系统提示', '系统繁忙。');
-                                }
-                            });
-
-                        }
-                    }]
             });
             return fs;
         }
@@ -284,7 +357,7 @@
     Ext.onReady(function () {
         Ext.QuickTips.init();
 
-        store = new Ext.data.JsonStore({
+        userStore = new Ext.data.JsonStore({
             url: '/user/ext/store',
             root: 'root',
             totalProperty: 'total',
@@ -310,19 +383,31 @@
             }},
             {header: '住址', width: 1, dataIndex: 'addr'},
             {header: '年龄', width: 1, dataIndex: 'age'},
-            {header: '审批状态', width: 1, dataIndex: 'authenticateId',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+            {header: '身份信息审批状态', width: 1, dataIndex: 'authenticateId',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
                     var val =  "审批通过";
-                    if(value!=1){
-                        val = "待审批";
+                    if(value==0){
+                        val = "未上传信息";
+                    } else if(value==1) {
+                        val = "审批通过";
+                    } else if(value==2) {
+                        val= "审批中";
+                    } else if(value==3) {
+                        val="审批未通过";
                     }
                     return val;
                 }
             },
             {header: '驾照号码', width: 1, dataIndex: 'authenticateDriver',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
-                    var val =  "审批通过";
-                    if(value!=1){
-                        val = "待审批";
-                    }
+                var val =  "审批通过";
+                if(value==0){
+                    val = "未上传信息";
+                } else if(value==1) {
+                    val = "审批通过";
+                } else if(value==2) {
+                    val= "审批中";
+                } else if(value==3) {
+                    val="审批未通过";
+                }
                     return val;
                 }
             },
@@ -334,12 +419,28 @@
                 items: [
                     {
                         icon: '/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
-                        tooltip: '查看',
+                        tooltip: '查看用户详细信息',
                         handler: function (grid, rowIndex, colIndex) {
-                            var record = store.getAt(rowIndex);
+                            var record = userStore.getAt(rowIndex);
                             showUserWin(record);
                         }
-                    }
+                    },
+                    {
+                        icon: '/static/assets/images/commons/g.gif',  // Use a URL in the icon config
+                        tooltip: '用户身份信息审批',
+                        handler: function (grid, rowIndex, colIndex) {
+                            var record = userStore.getAt(rowIndex);
+                            showAuthenticateIdWin(record);
+                        }
+                    },
+                    {
+                        icon: '/static/assets/images/commons/car.gif',  // Use a URL in the icon config
+                        tooltip: '用户驾照信息审批',
+                        handler: function (grid, rowIndex, colIndex) {
+                            var record = userStore.getAt(rowIndex);
+                            showAuthenticateDriverWin(record);
+                        }
+                    },
                 ]
             }
         ]);
@@ -410,23 +511,23 @@
             autoHeight:true,
             autoScroll: true,
             title: "用户管理",
-            store: store,
+            store: userStore,
             cm: cm,
             bbar: new Ext.PagingToolbar({
                 pageSize: 20,
-                store: store,
+                store: userStore,
                 displayInfo: true,
                 emptyMsg: "没有记录"
             })
         });
         grid.render("a2");
 
-        store.on('beforeload', function (thiz, options) {
+        userStore.on('beforeload', function (thiz, options) {
             thiz.baseParams["query"] = searchTextField.getValue();
             thiz.baseParams['state']=filterCombo.getValue();
             thiz.baseParams['state2']=filterCombo2.getValue();
         });
-        store.load({params: {start: 0, limit: 20}});
+        userStore.load({params: {start: 0, limit: 20}});
     })
 </script>
 <title></title>

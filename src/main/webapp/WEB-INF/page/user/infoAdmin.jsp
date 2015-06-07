@@ -7,6 +7,8 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
+
 <script type="text/javascript">
 
     function isNum(str) {
@@ -42,9 +44,9 @@
     function authenticateUser(type,result,id,win){
          var url = ""; 
 	    if(type=="id")
-                   url ="/userAdmin/approve/id";
+                   url ="${contextPath}/userAdmin/approve/id";
 	    else 
-                   url ="/userAdmin/approve/drive";
+                   url ="${contextPath}/userAdmin/approve/drive";
 	    Ext.Ajax.request({
 		url: url,
 		method: 'POST',
@@ -77,7 +79,7 @@
             height: 200, //图片高度
             autoEl: {
                 tag: 'img',    //指定为img标签
-                src: '/userAdmin/image/store?type=id&direction=pos&mobileNo='+ record.get('mobileNo'),    //指定url路径
+                src: '${contextPath}/userAdmin/image/store?type=id&direction=pos&mobileNo='+ record.get('mobileNo'),    //指定url路径
 		alt:"   正在加载图片，请稍后...."
             }
         });
@@ -90,7 +92,7 @@
             height: 200, //图片高度
             autoEl: {
                 tag: 'img',    //指定为img标签
-                src: '/userAdmin/image/store?type=id&direction=back&mobileNo='+record.get('mobileNo'),    //指定url路径
+                src: '${contextPath}/userAdmin/image/store?type=id&direction=back&mobileNo='+record.get('mobileNo'),    //指定url路径
 		alt:"   正在加载图片，请稍后...."
             }
         });
@@ -144,7 +146,7 @@
             height: 200, //图片高度
             autoEl: {
                 tag: 'img',    //指定为img标签
-                src: '/userAdmin/image/store?type=driver&direction=pos&mobileNo='+ record.get('mobileNo'),    //指定url路径
+                src: '${contextPath}/userAdmin/image/store?type=driver&direction=pos&mobileNo='+ record.get('mobileNo'),    //指定url路径
 		alt:"   正在加载图片，请稍后...."
             }
         });
@@ -290,7 +292,7 @@
 
         this.getOrderGrid = function(id){
             var orderStore = new Ext.data.JsonStore({
-                url: '/userAdmin/order/ext/store',
+                url: '${contextPath}/userAdmin/order/ext/store',
                 root: 'root',
                 totalProperty: 'total',
 //                fields: ["id","mobileNo", "carId","startTime","stopTime", "delMark","rentstatus"
@@ -358,7 +360,7 @@
         Ext.QuickTips.init();
 
         userStore = new Ext.data.JsonStore({
-            url: '/user/ext/store',
+            url: '${contextPath}/user/ext/store',
             root: 'root',
             totalProperty: 'total',
             fields: ["id","mobileNo", "username","userpwd", "email","registerTime", "gender","addr"
@@ -418,7 +420,7 @@
                 width: 0.5,
                 items: [
                     {
-                        icon: '/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
+                        icon: '${contextPath}/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
                         tooltip: '查看用户详细信息',
                         handler: function (grid, rowIndex, colIndex) {
                             var record = userStore.getAt(rowIndex);
@@ -426,7 +428,7 @@
                         }
                     },
                     {
-                        icon: '/static/assets/images/commons/g.gif',  // Use a URL in the icon config
+                        icon: '${contextPath}/static/assets/images/commons/g.gif',  // Use a URL in the icon config
                         tooltip: '用户身份信息审批',
                         handler: function (grid, rowIndex, colIndex) {
                             var record = userStore.getAt(rowIndex);
@@ -434,7 +436,7 @@
                         }
                     },
                     {
-                        icon: '/static/assets/images/commons/car.gif',  // Use a URL in the icon config
+                        icon: '${contextPath}/static/assets/images/commons/car.gif',  // Use a URL in the icon config
                         tooltip: '用户驾照信息审批',
                         handler: function (grid, rowIndex, colIndex) {
                             var record = userStore.getAt(rowIndex);

@@ -41,7 +41,7 @@
 	<body class="login-layout light-login" style="background-color: #D4DBCC;background-image:none;">
 		<div class="main-container">
 			<div class="main-content">
-				<div class="row" style="width:1024px;height:768px;margin: 0 auto;background-image: url('/static/assets/images/commons/loginBg.png');">
+				<div class="row" style="width:1024px;height:768px;margin: 0 auto;background-image: url('${contextPath}/static/assets/images/commons/loginBg.png');">
 					<div class="col-sm-11 col-sm-offset-1">
 						<div class="login-container" style="float: right;margin-top: 160px;margin-right: 0px;">
 							 

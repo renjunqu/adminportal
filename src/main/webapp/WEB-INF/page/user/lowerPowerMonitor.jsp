@@ -5,12 +5,10 @@
   Time: 下午8:13
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <title>车辆运行监控</title>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
+
   <style type="text/css">
     body{
       margin:0;
@@ -61,8 +59,6 @@
       float:right;
     }
   </style>
-</head>
-<body>
 <div id='mapContainer' >
 
 
@@ -73,12 +69,6 @@
 
 </div>
 
-</body>
-</html>
-<!--
-  <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"></script>
-    <script>
--->
 
 <script type="text/javascript">
 
@@ -157,7 +147,7 @@
       controlUI.style.borderRadius = '12px';
       controlUI.style.boxShadow = ' 0 3px 14px rgba(0,0,0,.5)';
       controlUI.style.textAlign = 'center';
-      controlUI.style.backgroundImage='url("/static/assets/images/commons/car2.png")';
+      controlUI.style.backgroundImage='url("${contextPath}/static/assets/images/commons/car2.png")';
       controlUI.style.zIndex = '300';
       controlUI.innerHTML = name;
 
@@ -185,7 +175,7 @@
 
 
   carStore = new Ext.data.JsonStore({
-     url:"/car/loadByCenter/withFilter",
+     url:"${contextPath}/car/loadByCenter/withFilter",
      idProperty:"vinNum",
      root:"root",
      fields: ["owner","latitude", "state","vinNum","longitude"],
@@ -289,7 +279,7 @@
         width: 0.5,
         items: [
           {
-            icon: '/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
+            icon: '${contextPath}/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
             tooltip: '查看',
             handler: function (grid, rowIndex, colIndex) {
               var record = carStore.getAt(rowIndex);

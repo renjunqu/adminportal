@@ -6,6 +6,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
+
 
 <div id="a1"></div>
 
@@ -23,7 +26,7 @@
           Ext.QuickTips.init();
 
           orderStore = new Ext.data.JsonStore({
-              url: '/order/ext/store',
+              url: '${contextPath}/order/ext/store',
               root: 'root',
               totalProperty: 'total',
               fields: ["id"

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.SimpleEmail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -63,6 +65,10 @@ public class SysUserController extends JavaEEFrameworkBaseController<SysUser> im
 	private AuthorityService authorityService;
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	@Autowired
+	private ServletContext servletContext;
+
 
 
 
@@ -133,7 +139,7 @@ public class SysUserController extends JavaEEFrameworkBaseController<SysUser> im
 	@RequestMapping("/logout")
 	public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.getSession().removeAttribute(SESSION_SYS_USER);
-		response.sendRedirect("/login.jsp");
+		response.sendRedirect(servletContext.getContextPath()+"/login.jsp");
 	}
 
 	@RequestMapping("/retrievePassword")

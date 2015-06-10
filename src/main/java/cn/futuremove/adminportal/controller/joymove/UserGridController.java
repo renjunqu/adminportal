@@ -1,9 +1,6 @@
 package cn.futuremove.adminportal.controller.joymove;
 
 
-import cn.futuremove.adminportal.util.ApplicationContextUtil;
-import cn.futuremove.adminportal.util.jdbc.SmartRowMapper;
-import cn.futuremove.adminportal.core.support.JqGridPageView;
 import com.futuremove.cacheServer.service.CarService;
 import com.joymove.entity.JOYDriverLicense;
 import com.joymove.entity.JOYIdAuthInfo;
@@ -13,23 +10,16 @@ import com.joymove.service.JOYDriverLicenseService;
 import com.joymove.service.JOYIdAuthInfoService;
 import com.joymove.service.JOYOrderService;
 import com.joymove.service.JOYUserService;
-import com.joymove.util.StringUtil;
-import org.apache.taglibs.standard.tag.common.xml.IfTag;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,20 +1,11 @@
 package cn.futuremove.adminportal.controller.joymove;
 
 
-import com.futuremove.cacheServer.dao.StaticMatDao;
 import com.futuremove.cacheServer.entity.Car;
-import cn.futuremove.adminportal.util.ApplicationContextUtil;
-import cn.futuremove.adminportal.util.GsonInstance;
-import cn.futuremove.adminportal.util.lbs.LbsNearbyVo;
-import cn.futuremove.adminportal.util.lbs.LbsService;
-import cn.futuremove.adminportal.util.lbs.LbsVo;
 import com.futuremove.cacheServer.service.CarService;
 import com.joymove.entity.JOYNCar;
 import com.joymove.util.SimpleJSONUtil;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

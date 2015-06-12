@@ -51,6 +51,7 @@ public class UserGridController {
             throws Exception {
 
         Map<String,Object> likeCondition = new HashMap<String, Object>();
+        JOYUser userFilter = new JOYUser();
 
         String query = request.getParameter("query");
         String state = request.getParameter("state");
@@ -60,55 +61,42 @@ public class UserGridController {
         Integer start = Integer.valueOf(request.getParameter("start"));
         Integer limit = Integer.valueOf(request.getParameter("limit"));
 
-        if (!StringUtils.isBlank(String.valueOf(start))) {
-            likeCondition.put("pageStart", start);
-        }
-        if (!StringUtils.isBlank(String.valueOf(limit))) {
-            likeCondition.put("pageSize", limit);
-        }
-
         if (!StringUtils.isBlank(query)) {
-            likeCondition.put("username", query);
-            likeCondition.put("mobileNo",query);
+            userFilter.mobileNo = query;
+            userFilter.username = query;
         }
 
         if (!StringUtils.isBlank(state)) {
-            likeCondition.put("authenticateid", state);
-
+            userFilter.authenticateId = Integer.parseInt(state);
         }
         if (!StringUtils.isBlank(state2)) {
-            likeCondition.put("authenticatedriver", state2);
+            userFilter.authenticateDriver = Integer.parseInt(state2);
         }
 
-        List<JOYUser> joyUsersList = joyUserService.getPagedUserList(likeCondition);
+        List<JOYUser> joyUsersList = joyUserService.getNeededList(userFilter, start, limit);
         JSONObject Reobj = new JSONObject();
         Reobj.put("root",joyUsersList);
         likeCondition.remove("pageStart");
-        List<JOYUser> joyUsersAllList = joyUserService.getPagedUserList(likeCondition);
+        List<JOYUser> joyUsersAllList = joyUserService.getNeededList(userFilter,null,null);
         Reobj.put("total",joyUsersAllList.size());
         return Reobj;
     }
 
     @RequestMapping("/userAdmin/order/ext/store")
     public @ResponseBody JSONObject orderStore(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JOYOrder orderFilter = new JOYOrder();
         Integer start = Integer.valueOf(request.getParameter("start"));
         Integer limit = Integer.valueOf(request.getParameter("limit"));
-        String mobileno = request.getParameter("mobileno");
+        String mobileNo = request.getParameter("mobileNo");
         Map<String,Object> likeCondition = new HashMap<String, Object>();
-        if (!StringUtils.isBlank(String.valueOf(start))) {
-            likeCondition.put("pageStart", start);
+        if (!StringUtils.isBlank(mobileNo)) {
+            orderFilter.mobileNo = mobileNo;
         }
-        if (!StringUtils.isBlank(String.valueOf(limit))) {
-            likeCondition.put("pageSize", limit);
-        }
-        if (!StringUtils.isBlank(mobileno)) {
-            likeCondition.put("mobileNo", mobileno);
-        }
-        List<JOYOrder> joyOrderList = joyOrderService.getPagedOrderList(likeCondition);
+        List<JOYOrder> joyOrderList = joyOrderService.getNeededList(orderFilter,start,limit);
         JSONObject Reobj = new JSONObject();
         Reobj.put("root",joyOrderList);
         likeCondition.remove("pageStart");
-        List<JOYOrder> joyOrderAllList = joyOrderService.getPagedOrderList(likeCondition);
+        List<JOYOrder> joyOrderAllList = joyOrderService.getNeededList(orderFilter, null, null);
         Reobj.put("total",joyOrderAllList.size());
         return Reobj;
     }
@@ -116,15 +104,18 @@ public class UserGridController {
     @RequestMapping("/userAdmin/image/store")
     public void  userImageGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
+            JOYIdAuthInfo idAuthInfoFilter = new JOYIdAuthInfo();
+            JOYDriverLicense driverLicenseFilter = new JOYDriverLicense();
             String mobileNo = String.valueOf(request.getParameter("mobileNo"));
             String imageType = String.valueOf(request.getParameter("type"));
             String imageDirection = String.valueOf(request.getParameter("direction"));
             Map<String, Object> likeConditon = new HashMap<String, Object>();
             byte[] imageData = null;
             if (!StringUtils.isBlank(mobileNo)) {
-                likeConditon.put("mobileNo", mobileNo);
+                idAuthInfoFilter.mobileNo = mobileNo;
+                driverLicenseFilter.mobileNo = mobileNo;
                 if (imageType.equals("driver")) {
-                    List<JOYDriverLicense> driverLicenses = joyDriverLicenseService.getDriverAuthInfo(likeConditon);
+                    List<JOYDriverLicense> driverLicenses = joyDriverLicenseService.getNeededList(driverLicenseFilter);
                     JOYDriverLicense joyDriverLic = driverLicenses.get(0);
                     if (imageDirection.equals("back")) {
                         imageData = joyDriverLic.driverAuthInfo_back;
@@ -132,7 +123,7 @@ public class UserGridController {
                         imageData = joyDriverLic.driverAuthInfo;
                     }
                 } else if (imageType.equals("id")) {
-                    List<JOYIdAuthInfo> authInfos = joyIdAuthInfoService.getNeededIdAuthInfo(likeConditon);
+                    List<JOYIdAuthInfo> authInfos = joyIdAuthInfoService.getNeededList(idAuthInfoFilter);
                     JOYIdAuthInfo authInfo = authInfos.get(0);
                     if (imageDirection.equals("back")) {
                         imageData = authInfo.idAuthInfo_back;
@@ -159,9 +150,10 @@ public class UserGridController {
         Integer id = Integer.parseInt(request.getParameter("id"));
         Integer result = Integer.parseInt(request.getParameter("result"));
         JOYUser user = new JOYUser();
-        user.id = id;
+        JOYUser userFilter = new JOYUser();
+        userFilter.id = id;
         user.authenticateId = result;
-        joyUserService.updateJOYUser(user);
+        joyUserService.updateRecord(user, userFilter);
     }
 
     @RequestMapping("/userAdmin/approve/drive")
@@ -169,8 +161,9 @@ public class UserGridController {
         Integer id = Integer.parseInt(request.getParameter("id"));
         Integer result = Integer.parseInt(request.getParameter("result"));
         JOYUser user = new JOYUser();
-        user.id = id;
+        JOYUser userFilter = new JOYUser();
+        userFilter.id = id;
         user.authenticateDriver = result;
-        joyUserService.updateJOYUser(user);
+        joyUserService.updateRecord(user, userFilter);
     }
 }

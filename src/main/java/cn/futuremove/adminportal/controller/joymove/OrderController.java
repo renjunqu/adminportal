@@ -2,6 +2,7 @@ package cn.futuremove.adminportal.controller.joymove;
 
 
 import com.joymove.entity.JOYOrder;
+import com.joymove.entity.JOYUser;
 import com.joymove.service.JOYOrderService;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
@@ -33,20 +34,16 @@ public class OrderController {
             Integer start = Integer.valueOf(request.getParameter("start"));
             Integer limit = Integer.valueOf(request.getParameter("limit"));
             String mobileno = request.getParameter("mobileno");
+            JOYOrder orderFilter = new JOYOrder();
             Map<String, Object> likeCondition = new HashMap<String, Object>();
-            if (!StringUtils.isBlank(String.valueOf(start))) {
-                likeCondition.put("pageStart", start);
-            }
-            if (!StringUtils.isBlank(String.valueOf(limit))) {
-                likeCondition.put("pageSize", limit);
-            }
+
             if (!StringUtils.isBlank(mobileno)) {
-                likeCondition.put("mobileNo", mobileno);
+                orderFilter.mobileNo = mobileno;
             }
-            List<JOYOrder> joyOrderList = joyOrderService.getPagedOrderList(likeCondition);
+            List<JOYOrder> joyOrderList = joyOrderService.getNeededList(orderFilter, start, limit);
             Reobj.put("root", joyOrderList);
             likeCondition.remove("pageStart");
-            List<JOYOrder> joyOrderAllList = joyOrderService.getPagedOrderList(likeCondition);
+            List<JOYOrder> joyOrderAllList = joyOrderService.getNeededList(orderFilter, null, null);
             Reobj.put("total", joyOrderAllList.size());
         } catch(Exception e) {
              System.out.println(e);

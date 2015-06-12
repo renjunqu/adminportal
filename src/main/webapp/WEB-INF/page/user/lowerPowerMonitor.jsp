@@ -73,7 +73,30 @@
 <script type="text/javascript">
 
 
+    refreshInterval = 5000;
+    startRefreshCar = false;
 
+    function getCarData(){
+        if(window.location.hash != "#page/user/lowerPowerMonitor"){
+        } else if(startRefreshCar) {
+            carStore.load(carStore.lastOptions);
+            var total = carStore.getCount();
+	    var tempInterval  = 5000;
+	    for(var i =0;i<total;i++) {
+	       var carData = carStore.getAt(i).data; 
+	       if(carData.state!=0 &&  carData.state!=2) {
+		   //临时加快速度
+	           tempInterval = 500; 
+		   break;
+	       }
+	    }
+	    refreshInterval = tempInterval;
+	    //console.log("hahaha   >>>>>>>>>>>>>>>>>>>>>>>"+refreshInterval);
+            window.setTimeout(getCarData,refreshInterval);
+        } else {
+            window.setTimeout(getCarData,refreshInterval);
+        }
+    }
   function initAMapContainer(){
 	    var width = $("#main-content").width();
 	    var height = $(window).height()-100;
@@ -89,15 +112,7 @@
 
 	    map.setZoom(20);
 
-	startRefreshCar = false;
-	refreshIntervalId =  window.setInterval(function(){
-		if(window.location.hash != "#page/user/lowerPowerMonitor"){
-		      clearInterval(refreshIntervalId);	
-		} else if(startRefreshCar) {
-		      carStore.load(carStore.lastOptions);
-	       }
-	    },5000);
-
+      window.setTimeout(getCarData,refreshInterval);
 	Ext.onReady(mapGridInit);
   }
 

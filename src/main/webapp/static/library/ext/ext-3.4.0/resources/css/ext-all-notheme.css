@@ -1186,7 +1186,7 @@ textarea {
 }
 
 .ext-strict .x-small-editor .x-form-text {
-    height:16px !important;
+    height:16px;
 }
 
 .ext-ie6 .x-small-editor .x-form-text, .ext-ie7 .x-small-editor .x-form-text {
@@ -1215,7 +1215,7 @@ textarea {
 .ext-webkit .x-small-editor .x-form-text{padding-top:3px;font-size:100%;}
 
 .ext-strict .ext-webkit .x-small-editor .x-form-text{
-    height:14px !important;
+    height:14px;
 }
 
 .x-form-clear {

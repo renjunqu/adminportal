@@ -9,8 +9,42 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
 
-<script type="text/javascript">
+<style type="text/css">     
+.qrjButtonStyle {
+    border: 10px;
+    color:#fff;
+ }
+.x-form-text {
+  height:25px !important;
+}
+.x-form-trigger {
+  height:25px !important;
+}
 
+.qrjGridButton {
+    padding:2px;
+    margin:2px;
+}
+</style>
+
+<script type="text/javascript">
+   function ifPhoneNo(inputtxt)  
+   {  
+      var phoneno = /^\d{11}$/;  
+     if((inputtxt.match(phoneno)))  
+     {  
+        return true;  
+     }  else  {  
+         return false;  
+     }  
+   } 
+
+    function renderMaybeEmpty(value) {
+            if(value==""||value==undefined||value==null)
+		    return '<font color="gray">--用户未输入--</font>';
+	    else 
+		    return value;
+    }
     function isNum(str) {
         var re = /^[\d]+$/
         return re.test(str);
@@ -33,6 +67,22 @@
         return true;
 
     }
+
+    function viewInfoClick(row) {
+	    var record = userStore.getAt(row);
+	    showUserWin(record);
+    }
+
+    function authIdClick(row){
+	    var record = userStore.getAt(row);
+	    showAuthenticateIdWin(record);
+    
+    }
+
+   function authDriverClick(row) {
+	    var record = userStore.getAt(row);
+	    showAuthenticateDriverWin(record);
+   }
 
 
     var userStore;
@@ -326,6 +376,8 @@
                 title: "订单信息",
                 store: orderStore,
                 cm: cm,
+	        collapsible: true,
+	        collapsed:true,
                 bbar: new Ext.PagingToolbar({
                     pageSize: 20,
                     store: orderStore,
@@ -366,15 +418,14 @@
             fields: ["id","mobileNo", "username","userpwd", "email","registerTime", "gender","addr"
                 , "age","failedTimes", "lockedTime","pushKey", "pushKey","authenticateId"
                 , "authenticateDriver","deposit", "homeAddr","corpAddr", "homeLatitude","homeLongitude"
-                , "corpLatitude","corpLongitude", "lastActiveTime"
+                , "corpLatitude","corpLongitude", "lastActiveTime","idNo","idName","driverLicenseNumber"
             ]          //传入需要显示的字段
         });
 
         var cm = new Ext.grid.ColumnModel([
-            {header: '手机号码', width: 1, dataIndex: 'mobileNo'},
-            {header: '用户名', width: 1, dataIndex: 'username'},
-            {header: '电子邮件', width: 1, dataIndex: 'email'},
-            {header: '性别', width: 1, dataIndex: 'gender',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
+            {header: '手机号', width: 1, sortable:true,dataIndex: 'mobileNo',renderer:renderMaybeEmpty},
+            {header: '用户姓名', width: 1, sortable:true,dataIndex: 'idName',renderer:renderMaybeEmpty},
+            {header: '性别', width: 1, dataIndex: 'gender',renderer:function(value){
                 console.log("@val:"+value)
                 if(value+""==0+"") {
                     return "女";
@@ -383,9 +434,9 @@
                 }
 
             }},
-            {header: '住址', width: 1, dataIndex: 'addr'},
-            {header: '年龄', width: 1, dataIndex: 'age'},
-            {header: '身份信息审批状态', width: 1, dataIndex: 'authenticateId',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+            {header: '身份证号', sortable:true,width: 1, dataIndex: 'idNo',renderer:renderMaybeEmpty},
+            {header: '驾驶证号', sortable:true,width: 1, dataIndex: 'driverLicenseNumber',renderer:renderMaybeEmpty},
+            {header: '身份信息审批状态', width: 1, sortable:true,dataIndex: 'authenticateId',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
                     var val =  "审批通过";
                     if(value==0){
                         val = "未上传信息";
@@ -399,7 +450,7 @@
                     return val;
                 }
             },
-            {header: '驾照号码', width: 1, dataIndex: 'authenticateDriver',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+            {header: '驾照信息审批状态', sortable:true,width: 1, dataIndex: 'authenticateDriver',renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
                 var val =  "审批通过";
                 if(value==0){
                     val = "未上传信息";
@@ -413,103 +464,143 @@
                     return val;
                 }
             },
-            {header: '家庭住址', width: 1, dataIndex: 'homeAddr'},
-            {header: '公司住址', width: 1, dataIndex: 'corpAddr'},
             {   header: '操作',
-                xtype: 'actioncolumn',
-                width: 0.5,
-                items: [
-                    {
-                        icon: '${contextPath}/static/assets/images/commons/gears.gif',  // Use a URL in the icon config
-                        tooltip: '查看用户详细信息',
-                        handler: function (grid, rowIndex, colIndex) {
-                            var record = userStore.getAt(rowIndex);
-                            showUserWin(record);
-                        }
-                    },
-                    {
-                        icon: '${contextPath}/static/assets/images/commons/g.gif',  // Use a URL in the icon config
-                        tooltip: '用户身份信息审批',
-                        handler: function (grid, rowIndex, colIndex) {
-                            var record = userStore.getAt(rowIndex);
-                            showAuthenticateIdWin(record);
-                        }
-                    },
-                    {
-                        icon: '${contextPath}/static/assets/images/commons/car.gif',  // Use a URL in the icon config
-                        tooltip: '用户驾照信息审批',
-                        handler: function (grid, rowIndex, colIndex) {
-                            var record = userStore.getAt(rowIndex);
-                            showAuthenticateDriverWin(record);
-                        }
-                    },
-                ]
+                width: 2.5,
+		renderer:function(value,meta,record,rowIndex){
+			var resultStr = '<input class="qrjGridButton" onclick="viewInfoClick('+rowIndex+');" type="button" value="查看详细信息"></input>';
+			var authIdState = parseInt(record.get('authenticateId'));
+			var authDriverState = parseInt(record.get('authenticateDriver'));
+
+			if(authIdState==2) {
+		               resultStr += '<input class="qrjGridButton" onclick="authIdClick('+rowIndex+');" type="button" value="审核用户身份信息"></input>';
+			} 
+			if(authDriverState==2) {
+		               resultStr += '<input class="qrjGridButton" onclick="authDriverClick('+rowIndex+');" type="button" value="审核用户驾照信息"></input>';
+			}
+			return resultStr;
+		},
             }
         ]);
-        var searchTextField = new Ext.form.TextField({
-            fieldLabel: '搜索'
-        });
 
 
-        var styleData = [
-            ['', '全部'],
-            ['0', '待审批'],
-            ['1', '已审批']
-        ];
-        var styleStore = new Ext.data.SimpleStore({
+        var stateStore = new Ext.data.SimpleStore({
             fields: ['value', 'text'],
-            data: styleData
-        });
-        var filterCombo = new Ext.form.ComboBox({
-            width:100,
-            anchor: '92%',
-            id: 'type',
-            name: 'type',
-            store: styleStore,
-            mode: 'local',
-            triggerAction: 'all',
-            valueField: 'value',
-            displayField: 'text',
-            allowBlank: false,
-            editable: false,
-            listeners : {
-                select : function(f, r, i) {
-                    store.load({params: {start: 0, limit: 20}});
-                }
-            }
-        });
-        var filterCombo2 = new Ext.form.ComboBox({
-            width:100,
-            anchor: '92%',
-            store: styleStore,
-            mode: 'local',
-            triggerAction: 'all',
-            valueField: 'value',
-            displayField: 'text',
-            allowBlank: false,
-            editable: false,
-            listeners : {
-                select : function(f, r, i) {
-                    store.load({params: {start: 0, limit: 20}});
-                }
-            }
+            data: [
+		    ['0', '全部'],
+		    ['1', '审批通过'],
+		    ['2', '审批中'],
+		    ['3', '审批未通过'],
+		]
         });
 
         var toolbar = new Ext.Toolbar({
-            items: [searchTextField,
+	    height:60,
+	    items: [
+		{
+		   id:"mobileNoFilter",
+		   xtype:'textfield',
+		   width:200,
+		   height:30,
+		   autoHeight:false,
+		   emptyText:"手机号",
+		   style:{
+		      margin:"0 10px 0 0"
+		   }
+		},
                 {
-                    text: '搜索',
+		    xtype:'button',
+		    id:"searchButton",
+		    text: '<b><font color="red">手机号筛选</font></b>',
                     handler: function() {
-                        store.load({params: {start: 0, limit: 20}});
-                    }
-                },'->','审批状态过滤：',filterCombo,'驾照号审批过滤：',filterCombo2
+		        mNoFilter = Ext.getCmp("mobileNoFilter");
+			var mNo =  mNoFilter.getValue();
+			if(mNo=="") {
+                             // userStore.load(userStore.lastOptions);
+                             delete userStore.lastOptions.params.mobileNo;
+                             reloadGrid(); 
+			} else if(isNum(mNo) && mNo.length<=11 ) {
+                             userStore.lastOptions.params.mobileNo = mNo;
+                             reloadGrid(); 
+			} else {
+				alert("请输入正确的手机号");
+			}
+                    },
+                    style:{
+		       border:"1px",
+		       borderStyle:"solid",
+	               borderColor:"black"
+	            }
+                },
+		'->',//现在开始进行右对齐
+		'<font style="border:#000 1px solid;color:red;margin:10px;padding:4px;">身份审核状态筛选</font>',
+		{
+			id:"idStateFilter",
+			xtype:"combo",
+			width:100,
+			store: stateStore,
+			mode: 'local',
+			triggerAction: 'all',
+			allowBlank: false,
+			editable: false,
+			forceSelection:true,
+			displayField: 'text',
+			valueField:'value',
+			value:"全部",
+			select : function(f, r, i) {
+				      isFilter =  Ext.getCmp("idStateFilter");
+				      var isValue = isFilter.getValue();
+				      if(isValue!=0) {
+                                         userStore.lastOptions.params.authenticateId = isValue;
+				      } else {
+                                         delete userStore.lastOptions.params.authenticateId;
+				      }
+                                      reloadGrid(); 
+			}
+
+		},
+		'<font style="border:#000 1px solid;color:red;margin:10px;padding:4px;">驾照审核状态筛选</font>',
+		{
+			id:"driverStateFilter",
+			xtype:"combo",
+			width:100,
+			store: stateStore,
+			mode: 'local',
+			triggerAction: 'all',
+			valueField: 'value',
+			displayField: 'text',
+			valueField:'value',
+			value:"全部",
+			allowBlank: false,
+			editable: false,
+			forceSelection:true,
+			listeners : {
+			   select : function(f, r, i) {
+				      dsFilter =  Ext.getCmp("driverStateFilter");
+				      var dsValue = dsFilter.getValue();
+				      if(dsValue!=0) {
+                                         userStore.lastOptions.params.authenticateDriver = dsValue;
+				      } else {
+                                         delete userStore.lastOptions.params.authenticateDriver;
+				      }
+                                      reloadGrid(); 
+			    }
+		        },
+			/*
+			tpl:'<tpl for=".">' +   
+				    '<div class="x-combo-list-item" style="height:30px;">' +   
+				    '{text}' +   
+				    '</div>'+   
+			    '</tpl>'  
+			*/
+		},
+		'<span style="margin:20px;"></span>'
             ]
         });
 
         var grid = new Ext.grid.GridPanel({
             viewConfig: {forceFit: true},
             tbar:toolbar,
-//            height:$(window).height(),
+            //height:$(window).height(),
             autoHeight:true,
             autoScroll: true,
             title: "用户管理",
@@ -525,9 +616,9 @@
         grid.render("a2");
 
         userStore.on('beforeload', function (thiz, options) {
-            thiz.baseParams["query"] = searchTextField.getValue();
-            thiz.baseParams['state']=filterCombo.getValue();
-            thiz.baseParams['state2']=filterCombo2.getValue();
+            //thiz.baseParams["query"] = searchTextField.getValue();
+            //thiz.baseParams['state']=filterCombo.getValue();
+            //thiz.baseParams['state2']=filterCombo2.getValue();
         });
         userStore.load({params: {start: 0, limit: 20}});
     })

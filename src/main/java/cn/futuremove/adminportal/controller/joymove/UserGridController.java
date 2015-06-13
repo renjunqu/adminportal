@@ -10,6 +10,8 @@ import com.joymove.service.JOYDriverLicenseService;
 import com.joymove.service.JOYIdAuthInfoService;
 import com.joymove.service.JOYOrderService;
 import com.joymove.service.JOYUserService;
+import com.joymove.util.SimpleJSONUtil;
+import net.sf.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,32 +56,23 @@ public class UserGridController {
         Map<String,Object> likeCondition = new HashMap<String, Object>();
         JOYUser userFilter = new JOYUser();
 
-        String query = request.getParameter("query");
-        String state = request.getParameter("state");
-        String state2 = request.getParameter("state2");
-
-        System.out.println("@query:" + query);
+        //System.out.println("@query:" + query);
         Integer start = Integer.valueOf(request.getParameter("start"));
         Integer limit = Integer.valueOf(request.getParameter("limit"));
 
-        if (!StringUtils.isBlank(query)) {
-            userFilter.mobileNo = query;
-            userFilter.username = query;
-        }
+        userFilter.setDataFilterFromHTTPReq(request);
 
-        if (!StringUtils.isBlank(state)) {
-            userFilter.authenticateId = Integer.parseInt(state);
-        }
-        if (!StringUtils.isBlank(state2)) {
-            userFilter.authenticateDriver = Integer.parseInt(state2);
-        }
-
-        List<JOYUser> joyUsersList = joyUserService.getNeededList(userFilter, start, limit);
+        List<Map<String,Object>> mapList = joyUserService.getExtendInfoPagedList(" select u.*, m.driverLicenseNumber  from JOY_Users u left join JOY_DriverLicense m on u.mobileNo = m.mobileNo",userFilter);
         JSONObject Reobj = new JSONObject();
-        Reobj.put("root",joyUsersList);
-        likeCondition.remove("pageStart");
-        List<JOYUser> joyUsersAllList = joyUserService.getNeededList(userFilter,null,null);
-        Reobj.put("total",joyUsersAllList.size());
+        JSONArray joyUserJsonList = new JSONArray();
+        for(int i=0;i<mapList.size();i++) {
+            Map<String,Object> mapE = mapList.get(i);
+          //  System.out.println(SimpleJSONUtil.fromMap(mapE).toJSONString());
+            joyUserJsonList.add(SimpleJSONUtil.fromMap(mapE));
+        }
+
+        Reobj.put("root",joyUserJsonList);
+        Reobj.put("total",joyUserService.countRecord(userFilter));
         return Reobj;
     }
 

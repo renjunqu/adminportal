@@ -4,6 +4,8 @@ package cn.futuremove.adminportal.controller.joymove;
 import com.joymove.entity.JOYOrder;
 import com.joymove.entity.JOYUser;
 import com.joymove.service.JOYOrderService;
+import com.joymove.util.SimpleJSONUtil;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +34,58 @@ public class OrderController {
     public @ResponseBody JSONObject modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JSONObject Reobj = new JSONObject();
         try {
+            JOYOrder orderFilter = new JOYOrder();
+            //System.out.println("@query:" + query);
             Integer start = Integer.valueOf(request.getParameter("start"));
             Integer limit = Integer.valueOf(request.getParameter("limit"));
-            String mobileno = request.getParameter("mobileno");
-            JOYOrder orderFilter = new JOYOrder();
-            Map<String, Object> likeCondition = new HashMap<String, Object>();
 
-            if (!StringUtils.isBlank(mobileno)) {
-                orderFilter.mobileNo = mobileno;
+            orderFilter.setDataFilterFromHTTPReq(request);
+
+            Map<String, Object> timeScope = new HashMap<String, Object>();
+
+            try {
+                if (request.getParameter("maxStartTime") != null) {
+                    timeScope.put("maxStartTime", new Date(Long.parseLong(request.getParameter("maxStartTime"))));
+                }
+                if (request.getParameter("minStartTime") != null) {
+                    timeScope.put("minStartTime", new Date(Long.parseLong(request.getParameter("minStartTime"))));
+                }
+
+                if (request.getParameter("minStopTime") != null) {
+                    timeScope.put("minStopTime", new Date(Long.parseLong(request.getParameter("minStopTime"))));
+                }
+
+                if (request.getParameter("maxStopTime") != null) {
+                    timeScope.put("maxStopTime", new Date(Long.parseLong(request.getParameter("maxStopTime"))));
+                }
+            } catch(Exception e) {
+                timeScope.clear();
             }
-            List<JOYOrder> joyOrderList = joyOrderService.getNeededList(orderFilter, start, limit);
-            Reobj.put("root", joyOrderList);
-            likeCondition.remove("pageStart");
-            List<JOYOrder> joyOrderAllList = joyOrderService.getNeededList(orderFilter, null, null);
-            Reobj.put("total", joyOrderAllList.size());
+
+
+
+
+
+       //     List<Map<String,Object>> mapList = joyUserService.getExtendInfoPagedList(" select u.*, m.driverLicenseNumber  from JOY_Users u left join JOY_DriverLicense m on u.mobileNo = m.mobileNo", userFilter);
+
+            List<Map<String,Object>> mapList = joyOrderService.getExtendInfoPagedList(
+                    " select sum(cp.couponNum) as cNum,ph.type as payType,ph.balance as payBalance,ncar.licensenum as carLicenseNum,car.desp as carDesp ,u.* from " +
+                            " JOY_Order u " +
+                            " left join JOY_Coupon cp on u.id = cp.orderId " +
+                            " left join JOY_PayHistory ph on u.id = ph.orderId " +
+                            " left join JOY_NCar ncar on u.carVinNum=ncar.vinNum " +
+                            " left join JOY_Car car on u.carId = car.id ",
+                    timeScope,orderFilter,start,limit,"DESC");
+
+             JSONArray joyExtendOrderJsonList = new JSONArray();
+
+             for(int i=0;i<mapList.size();i++) {
+                 Map<String,Object> mapE = mapList.get(i);
+                 joyExtendOrderJsonList.add(SimpleJSONUtil.fromMap(mapE));
+             }
+            Reobj.put("root",joyExtendOrderJsonList);
+            Reobj.put("total", joyOrderService.countRecord(orderFilter));
+
         } catch(Exception e) {
              System.out.println(e);
             e.printStackTrace();

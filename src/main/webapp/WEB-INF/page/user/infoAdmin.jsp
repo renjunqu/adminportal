@@ -8,7 +8,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
-
+<script type="text/javascript" src="${contextPath}/static/assets/js/jquery.datetimepicker.js"></script>
+<link    rel="stylesheet" href="${contextPath}/static/assets/css/jquery.datetimepicker.css" />
 <style type="text/css">     
 .qrjButtonStyle {
     border: 10px;
@@ -24,6 +25,10 @@
 .qrjGridButton {
     padding:2px;
     margin:2px;
+}
+.x-form-item-label {
+   width:200px !important;
+   color:red;
 }
 </style>
 
@@ -45,6 +50,13 @@
 	    else 
 		    return value;
     }
+    function maybeEmpty(value) {
+            if(value==""||value==undefined||value==null)
+		    return '--用户未输入--';
+	    else 
+		    return value;
+    }
+
     function isNum(str) {
         var re = /^[\d]+$/
         return re.test(str);
@@ -90,6 +102,31 @@
     function reloadGrid() {
         userStore.load(userStore.lastOptions);
     }
+   var stateStore = new Ext.data.SimpleStore({
+            fields: ['value', 'text'],
+            data: [
+		    ['0', '全部'],
+		    ['1', '审批通过'],
+		    ['2', '审批中'],
+		    ['3', '审批未通过'],
+		]
+    });
+   var payTypeStore = new Ext.data.SimpleStore({
+            fields: ['value', 'text'],
+            data: [
+		    [0, '全部'],
+		    [1, '支付宝'],
+		    [2, '微信'],
+		]
+    });
+   var targetStore = new Ext.data.SimpleStore({
+            fields: ['value', 'text'],
+            data: [
+		    [0, '全部'],
+		    [1, '押金充值'],
+		    [2, '租车支付'],
+		]
+    });
 
     function authenticateUser(type,result,id,win){
          var url = ""; 
@@ -242,13 +279,13 @@
     function showUserWin(record){
         var id = record.get("id");
         var mobileNo = record.get("mobileNo");
-        var username = record.get("username");
-        var gender = record.get("gender");
-        var addr = record.get("addr");
-        var age = record.get("age");
-        var email = record.get("email");
-        var homeAddr = record.get("homeAddr");
-        var corpAddr = record.get("corpAddr");
+        var username = maybeEmpty(record.get("username"));
+        var gender =   record.get("gender")=="0"?"女":"男";
+        var addr =     maybeEmpty(record.get("addr"));
+        var age =      maybeEmpty(record.get("age"));
+        var email =    maybeEmpty(record.get("email"));
+        var homeAddr = maybeEmpty(record.get("homeAddr"));
+        var corpAddr = maybeEmpty(record.get("corpAddr"));
         this.getFormPanel = function(){
             var formFields = new Array();
             formFields[formFields.length] = new Ext.form.TextField({
@@ -263,7 +300,7 @@
                 id:'username',
                 name: 'username',
                 value:username
-                ,readOnly : true
+                ,readOnly : true,
             });
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '电子邮件',
@@ -272,8 +309,8 @@
                 value:email
                 ,readOnly : true
             });
-            var authenticateId = record.get("authenticateId");
-            var authenticateDriver = record.get("authenticateDriver");
+            var authenticateId = stateStore.getAt(record.get("authenticateId")).data["text"];
+            var authenticateDriver = stateStore.getAt(record.get("authenticateDriver")).data["text"];
             formFields[formFields.length] = new Ext.form.TextField({
                 fieldLabel: '性别',
                 format:'Y-m-d',
@@ -332,7 +369,7 @@
                 items:[{
                     layout:'column',
                     border:false,
-                    defaults:{layout: 'form',columnWidth:.5,border: false},
+                    defaults:{layout:'form',columnWidth:.5,border: false},
                     items:getFormFieldsForColumnLayout(formFields),
                     anchor:"95%"
                 }]
@@ -341,71 +378,184 @@
         }
 
         this.getOrderGrid = function(id){
-            var orderStore = new Ext.data.JsonStore({
-                url: '${contextPath}/userAdmin/order/ext/store',
+            payHistoryStore = new Ext.data.JsonStore({
+                url: '${contextPath}/userAdmin/payhistory/ext/store',
                 root: 'root',
                 totalProperty: 'total',
-//                fields: ["id","mobileNo", "carId","startTime","stopTime", "delMark","rentstatus"
-//                    ,"type", "batonMode", "state", "carVinnum", "destination"]          //传入需要显示的字段
-
                 fields: ["id"
-                    , "mobileNo","carId","startTime", "stopTime"
-                    ,"rentstatus","delMark", "batonMode","state", "carVinnum","destination"
+                    , "balance","type","rentTime", 
+                    ,"mobileNo","orderId", "target"
                 ]
             });
 
-            orderStore.on('beforeload', function (thiz, options) {
+            payHistoryStore.on('beforeload', function (thiz, options) {
                 thiz.baseParams["mobileNo"] = mobileNo;
+		delete thiz.baseParams.target;
+		delete thiz.baseParams.type;
+		delete payHistoryStore.lastOptions.params.target;
+		delete payHistoryStore.lastOptions.params.type;
+		if(Ext.getCmp("targetFilter")) {
+			var targetFilter =  Ext.getCmp("targetFilter").getValue();
+			if(targetFilter!=0) thiz.baseParams["target"]=targetFilter;
+		}
+		if(Ext.getCmp("payTypeFilter")) {
+			var payTypeFilter =  Ext.getCmp("payTypeFilter").getValue();
+			if(payTypeFilter!=0) thiz.baseParams["type"]=payTypeFilter;
+		}
+		//alert(JSON.stringify(payHistoryStore.lastOptions.params));
+
             });
 
             var cm = new Ext.grid.ColumnModel([
-                {header: '订单号', width: 1, dataIndex: 'id'},
-                {header: '手机号码', width: 1, dataIndex: 'mobileNo'},
-                {header: '车辆ID', width: 1, dataIndex: 'carId'},
-                {header: '下单时间', width: 1, dataIndex: 'startTime'},
-                {header: '还车时间', width: 1, dataIndex: 'stopTime'},
-                {header: '订单状态', width: 1, dataIndex: 'state'},
-                {header: '车辆号', width: 1, dataIndex: 'carVinnum'},
-                {header: '目的地', width: 1, dataIndex: 'destination'}
+			    {header: '支付额度', width: 1, dataIndex: 'balance', renderer:function(value) {
+			       return "￥"+parseFloat(value).format(2,4)+ "元";
+			    }},
+			    {header: '支付手段', width: 1, dataIndex: 'type',renderer:function(value){
+				    if(value==1) {
+				         return "支付宝"; 
+				    } else if(value==2) {
+				          return "微信"; 
+				    } else {
+				           return "其他手段";
+				    }
+			    }},
+			    {header: '支付时间', width: 1, dataIndex: 'rentTime',renderer:function(value){
+			        rentDate = new Date(parseInt(value,10)); 
+			        return rentDate.Format("yyyy-MM-dd      hh:mm:ss");
+			    }},
+			    {header: '订单编号', width: 1, dataIndex: 'orderId',renderer:function(value){
+				    if(value==""||value==undefined||value==null) {
+				         return "无订单编号"; 
+				    } else
+				         return value;
+			    }},
+			    {header: '支付目的', width: 1, dataIndex: 'target',renderer:function(value){
+			       if(value==1) {
+				       return "用户钱包充值";
+			       } else if(value==2) {
+			                return "租车支付"; 
+			       } else {
+				       return "未知用途";
+			       
+			       }
+			    }}
             ]);
 
-            var orderGrid = new Ext.grid.GridPanel({
+        var payHistoryToolbar = new Ext.Toolbar({
+	    height:60,
+	    items: [
+		'<span style="width:50px;margin-right:30px;margin-left:30px;"> 最早支付时间: </span>',
+		'<input id="minRentTime" placeholder="YYYY-MM-DD HH:mm:ss" type="text" style="width:200px;"></input>',
+		'<span style="width:50px;margin-right:30px;margin-left:30px;"> 最晚支付时间: </span>',
+		'<input id="maxRentTime" placeholder="YYYY-MM-DD HH:mm:ss" type="text" style="width:200px;"></input>',
+		 '->',//现在开始进行右对齐
+		'<font style="border:#000 1px solid;color:red;margin:10px;padding:4px;">支付目的筛选</font>',
+		{
+			id:"targetFilter",
+			xtype:"combo",
+			width:100,
+			store: targetStore,
+			mode: 'local',
+			triggerAction: 'all',
+			allowBlank: false,
+			editable: false,
+			forceSelection:true,
+			displayField: 'text',
+			valueField:'value',
+			value:0,
+			listeners:{
+			select : function() {
+                             payHistoryStore.load(payHistoryStore.lastOptions);
+			   }
+			},
+
+		},
+		'<font style="border:#000 1px solid;color:red;margin:10px;padding:4px;">支付手段筛选</font>',
+		{
+			id:"payTypeFilter",
+			xtype:"combo",
+			width:100,
+			store: payTypeStore,
+			mode: 'local',
+			triggerAction: 'all',
+			valueField: 'value',
+			displayField: 'text',
+			valueField:'value',
+			value:0,
+			allowBlank: false,
+			editable: false,
+			forceSelection:true,
+			listeners : {
+			   select : function() {
+                                payHistoryStore.load(payHistoryStore.lastOptions);
+			    }
+		        },
+		},
+		'<span style="margin:20px;"></span>'
+            ]
+        });
+      
+            var payHistoryGrid = new Ext.grid.GridPanel({
                 viewConfig: {forceFit: true},
                 autoHeight: true,
                 autoScroll: true,
-                title: "订单信息",
-                store: orderStore,
+		tbar:payHistoryToolbar,
+                title: "用户支付历史浏览",
+                store: payHistoryStore,
                 cm: cm,
-	        collapsible: true,
-	        collapsed:true,
+	        collapsible:false,
+	        collapsed:false,
                 bbar: new Ext.PagingToolbar({
                     pageSize: 20,
-                    store: orderStore,
+                    store: payHistoryStore,
                     displayInfo: true,
                     emptyMsg: "没有记录"
                 })
             });
-            orderStore.load({params: {start: 0, limit: 20}});
-
-            return orderGrid;
+            payHistoryStore.load({params: {start: 0, limit: 20}});
+            return payHistoryGrid;
         };
 
         var fs =  this.getFormPanel(id);
         var grid = this.getOrderGrid();
 
 
-        var height = $(window).height()-200;
+        var height = $(window).height();
         var width = $(window).width()-200;
         var modifyWin = new Ext.Window({
             title: "查看详细信息",
             modal: true,
             width: width,
             height: height,
-            resizable: false,
+            resizable: true,
             autoScroll: true,
             items: [ fs,grid ]
         });
         modifyWin.show();
+	$("#minRentTime").datetimepicker({
+			 onChangeDateTime:function(dp,$input){ 
+				     try {
+					    var q = new Date($input.val());
+					    payHistoryStore.lastOptions.params.minRentTime = q.getTime();
+                                            payHistoryStore.load(payHistoryStore.lastOptions);
+				    } catch(err) {
+					       //alert(err); 
+				    }
+			            jQuery('#minRentTime').datetimepicker('hide'); //support hide,show and destroy command
+			  }
+	});
+	$("#maxRentTime").datetimepicker({
+			 onChangeDateTime:function(dp,$input){ 
+				     try {
+					    var q = new Date($input.val());
+					    payHistoryStore.lastOptions.params.maxRentTime = q.getTime();
+                                            payHistoryStore.load(payHistoryStore.lastOptions);
+				    } catch(err) {
+					      // alert(err); 
+				    }
+			            jQuery('#maxRentTime').datetimepicker('hide'); //support hide,show and destroy command
+			  }
+	});
     }
 
     Ext.onReady(function () {
@@ -483,16 +633,6 @@
         ]);
 
 
-        var stateStore = new Ext.data.SimpleStore({
-            fields: ['value', 'text'],
-            data: [
-		    ['0', '全部'],
-		    ['1', '审批通过'],
-		    ['2', '审批中'],
-		    ['3', '审批未通过'],
-		]
-        });
-
         var toolbar = new Ext.Toolbar({
 	    height:60,
 	    items: [
@@ -546,6 +686,7 @@
 			displayField: 'text',
 			valueField:'value',
 			value:"全部",
+			listeners:{
 			select : function(f, r, i) {
 				      isFilter =  Ext.getCmp("idStateFilter");
 				      var isValue = isFilter.getValue();
@@ -555,6 +696,7 @@
                                          delete userStore.lastOptions.params.authenticateId;
 				      }
                                       reloadGrid(); 
+				 }
 			}
 
 		},

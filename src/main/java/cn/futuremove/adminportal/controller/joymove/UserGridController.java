@@ -62,7 +62,8 @@ public class UserGridController {
 
         userFilter.setDataFilterFromHTTPReq(request);
 
-        List<Map<String,Object>> mapList = joyUserService.getExtendInfoPagedList(" select u.*, m.driverLicenseNumber  from JOY_Users u left join JOY_DriverLicense m on u.mobileNo = m.mobileNo",userFilter);
+        List<Map<String,Object>> mapList = joyUserService.getExtendInfoPagedList(" select u.*, m.driverLicenseNumber  from JOY_Users u left join JOY_DriverLicense m on u.mobileNo = m.mobileNo",
+                userFilter,start,limit);
         JSONObject Reobj = new JSONObject();
         JSONArray joyUserJsonList = new JSONArray();
         for(int i=0;i<mapList.size();i++) {
@@ -73,25 +74,6 @@ public class UserGridController {
 
         Reobj.put("root",joyUserJsonList);
         Reobj.put("total",joyUserService.countRecord(userFilter));
-        return Reobj;
-    }
-
-    @RequestMapping("/userAdmin/order/ext/store")
-    public @ResponseBody JSONObject orderStore(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        JOYOrder orderFilter = new JOYOrder();
-        Integer start = Integer.valueOf(request.getParameter("start"));
-        Integer limit = Integer.valueOf(request.getParameter("limit"));
-        String mobileNo = request.getParameter("mobileNo");
-        Map<String,Object> likeCondition = new HashMap<String, Object>();
-        if (!StringUtils.isBlank(mobileNo)) {
-            orderFilter.mobileNo = mobileNo;
-        }
-        List<JOYOrder> joyOrderList = joyOrderService.getNeededList(orderFilter,start,limit);
-        JSONObject Reobj = new JSONObject();
-        Reobj.put("root",joyOrderList);
-        likeCondition.remove("pageStart");
-        List<JOYOrder> joyOrderAllList = joyOrderService.getNeededList(orderFilter, null, null);
-        Reobj.put("total",joyOrderAllList.size());
         return Reobj;
     }
 

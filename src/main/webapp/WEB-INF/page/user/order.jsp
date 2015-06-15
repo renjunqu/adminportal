@@ -31,6 +31,9 @@
    width:200px !important;
    color:red;
 }
+.x-form-element .x-form-field {
+  border:0px solid;
+}
 </style>
 
 
@@ -44,7 +47,7 @@
         return re.test(str);
     }
     var geocoder; 
-    var scripts = ["http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"];
+    var scripts = [];//["http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"];
     var stateStore = new Ext.data.SimpleStore({
             fields: ['value', 'text'],
             data: [
@@ -54,6 +57,18 @@
 		    ['3', '支付完毕'],
 		]
    });
+   var sicon = new AMap.Icon({
+                                      image: "http://cache.amap.com/lbs/static/jsdemo002.png",
+                                       size:new AMap.Size(44,44),
+                                imageOffset: new AMap.Pixel(-334, -180)
+                            });
+
+  var eicon = new AMap.Icon({
+                                                image: "http://cache.amap.com/lbs/static/jsdemo002.png",
+                                                size:new AMap.Size(44,44),
+                                               imageOffset: new AMap.Pixel(-334, -134)
+  });
+
   var payTypeStore = new Ext.data.SimpleStore({
             fields: ['value', 'text'],
             data: [
@@ -62,17 +77,165 @@
 		    [2, '微信'],
 		]
    });
+  function showFeeWin(index){
+                var record = orderStore.getAt(index);
+                if(record.get("state")==1){
+                     alert("租用中的无费用信息");
+                     return;
+               }
+	       var startTime = new Date(parseInt(record.get('startTime'),10)); 
+	       var stopTime = new Date(parseInt(record.get('stopTime'),10)); 
+	       var diffTime = stopTime.getTime() - startTime.getTime();
+	        var fee =  (diffTime / (1000*60*100)).format(2,4)+"元";
+                var cNum = record.get('cNum');
+
+                if(!isNum(cNum)) {
+                    cNum = "未使用优惠卷"
+                }
+                var payType = record.get('payType');
+                var payBalance  = record.get('payBalance');
+                if(!isNum(payType)) {
+                    payType="未使用其他手段支付"
+                    payBalance = "";
+                } else {
+                     if(isNum==1) {
+                        payType="支付宝";
+                        payBalance = payBalance.format(2,4)+"元";
+                     } else if(isNum==2) {
+                        payType="微信";
+                        payBalance = payBalance.format(2,4)+"元";
+                     } else {
+			    payType="未使用其他手段支付"
+			    payBalance = "";
+                    }
+               }
+
+		var fs = new Ext.FormPanel({
+			buttonAlign: 'center',
+			items:[
+				{
+				     xtype:"textfield",
+				     fieldLabel: '总金额',
+				     value:fee,
+                                     inputStyleAttribute:{"border":"none"},
+				},
+				{
+				     xtype:"textfield",
+				     fieldLabel: '优惠劵额度',
+				     value:cNum
+				},
+				{
+				     xtype:"textfield",
+				     fieldLabel: '其他支付手段',
+				     value:payType
+				},
+				{
+				     xtype:"textfield",
+				     fieldLabel: '支付额度',
+				     value:payBalance
+				},
+                        ]
+		     });
+
+		var feeWin = new Ext.Window({
+		    title: "费用信息",
+		    modal: true,
+		    width: 400,
+		    height: 160,
+		    resizable: false,
+		    autoScroll: false,
+		    items: [ fs ]
+		});
+             feeWin.show(); 
+  }
+
+  function showMapWin(index){
+
+                var record = orderStore.getAt(index);
+                var formFields = new Array();
+		formFields[formFields.length] = new Ext.BoxComponent({
+		    width: 640, //图片宽度
+		    height: 500, //图片高度
+		    autoEl: {
+			tag: 'div',    //指定为div标签
+                        html:'<div id="mapContainer" style="width:640px;height:500px;">hello</div>'
+		    }
+		});
+		    var fs = new Ext.FormPanel({
+			autoHeight:true,
+			bodyStyle:"padding:10px",
+			buttonAlign: 'center',
+			items:[{
+			    layout:'form',
+			    border:false,
+			    items:getFormFieldsForColumnLayout(formFields),
+			    anchor:"95%"
+			}]
+		     });
+
+		var mapWin = new Ext.Window({
+		    title: "详细轨迹",
+		    modal: true,
+		    width: 640,
+		    height: 500,
+		    resizable: true,
+		    autoScroll: true,
+		    items: [ fs ]
+		});
+             mapWin.show(); 
+              var   map = new AMap.Map('mapContainer', { 
+                                resizeEnable: true, 
+                                rotateEnable: true, 
+                                dragEnable: true, 
+                                zoomEnable: true, 
+                                //设置可缩放的级别 
+                                zooms: [3,18], 
+                                view: new AMap.View2D({ 
+                                        center: new AMap.LngLat(116.510756,39.894255), 
+                                        zoom: 12 
+                                }) 
+                 }); 
+                map.plugin(['AMap.ToolBar'],function(){ 
+                            var toolBar = new AMap.ToolBar(); 
+                          map.addControl(toolBar); 
+                });
+                 var startPos  = {
+				map:map,
+				icon:sicon,
+				position:new AMap.LngLat(record.get('startLongitude'), record.get('startLatitude')),
+                                        offset : {
+                                                        x : -16,
+                                                     y : -40
+                             }
+                  };
+                var startMarker = new AMap.Marker(startPos);
+                startMarker.setMap(map);
+                if(parseInt(record.get('state'))!=1) {
+                       var stopPos  = {
+				map:map,
+				icon:eicon,
+				position:new AMap.LngLat(record.get('stopLongitude'), record.get('stopLatitude')),
+                                        offset : {
+                                                        x : -16,
+                                                     y : -40
+                                      }
+                       };
+                       var stopMarker = new AMap.Marker(stopPos);
+                       stopMarker.setMap(map);
+                }
+               map.setFitView();
+      }
+
   $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
 
     //加载地理编码服务
-  $( function(){
        AMap.service(["AMap.Geocoder"], function() {       
 		geocoder = new AMap.Geocoder({
 			city:"010", //城市，默认：“全国”
 			radius:1000 //范围，默认：500
 		});
 	    });
-       });
+
 
       Ext.onReady(function () {
           Ext.QuickTips.init();
@@ -163,18 +326,18 @@
 							     $("#stopAddr"+rowIndex).html(addrName);
 						       } catch(err) {
 								console.log(JSON.stringify(result)); 
-								$("#startAddr"+rowIndex).html("地址加载失败");
-								$("#startAddr"+rowIndex).css({"color":"red"});
+								$("#stopAddr"+rowIndex).html("地址加载失败");
+								$("#stopAddr"+rowIndex).css({"color":"red"});
 							}
 						 } else {
 						        console.log(JSON.stringify(result)); 
-							$("#startAddr"+rowIndex).html("地址加载失败");
-							$("#startAddr"+rowIndex).css({"color":"red"});
+							$("#stopAddr"+rowIndex).html("地址加载失败");
+							$("#stopAddr"+rowIndex).css({"color":"red"});
 						 }
 					});
 	                         return  '<div id="stopAddr'+rowIndex+'" style="width:120px;height:30px;color:gray">--地址正在加载--</div>';
 			      }  catch(err) {
-			         console.log(err+"hahah"); 
+			         //console.log(err+"hahah"); 
 	                         return  '<div id="stopAddr'+rowIndex+'" style="width:120px;height:30px;color:red">--地址加载失败--</div>';
 			      }
 			}
@@ -186,10 +349,10 @@
 	                       return "否";
 	       }},
                {header: '查看信息', width: 1, renderer:function(value,cellmeta,record,rowIndex, columnIndex, store) {
-			var resultStr = '<input class="qrjGridButton"  type="button" value="轨迹"></input>';
+			var resultStr = '<input class="qrjGridButton"  onclick="showMapWin('+rowIndex+');" type="button" value="轨迹"></input>';
 			var state = parseInt(record.get('state'));
 			if(state!=1) {
-			      resultStr += '<input class="qrjGridButton"  type="button" value="费用详情"></input>';
+			      resultStr += '<input class="qrjGridButton" onclick="showFeeWin('+rowIndex+')" type="button" value="费用详情"></input>';
 			}
 			return resultStr;
 	       }},

@@ -60,6 +60,7 @@ public class BaseDao<E> implements Dao<E> {
 
     public BaseDao(Class<E> entityClass) {
         this.entityClass = entityClass;
+        
     }
 
     public void persist(E entity) {

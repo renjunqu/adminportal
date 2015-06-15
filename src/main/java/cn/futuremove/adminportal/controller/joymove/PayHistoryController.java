@@ -37,6 +37,12 @@ public class PayHistoryController {
         Integer start = Integer.valueOf(request.getParameter("start"));
         Integer limit = Integer.valueOf(request.getParameter("limit"));
         payHistoryFilter.setDataFilterFromHTTPReq(request);
+        if(payHistoryFilter.mobileNo==null) {
+            payHistoryFilter.mobileNo = "%";
+        } else {
+            payHistoryFilter.mobileNo+="%";
+        }
+
         Map<String,Object> timeScope = new HashMap<String, Object>();
         if(request.getParameter("minRentTime")!=null) {
             timeScope.put("minRentTime", new Date(Long.parseLong(request.getParameter("minRentTime"))));

@@ -9,7 +9,8 @@
         <title>Beehive Mobility  Network</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
-
+        <!-- load gaode -->
+        <script src="http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"></script>
 
 
         <!-- bootstrap & fontawesome -->

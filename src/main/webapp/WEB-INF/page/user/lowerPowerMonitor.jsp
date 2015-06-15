@@ -84,7 +84,7 @@
 	    var tempInterval  = 5000;
 	    for(var i =0;i<total;i++) {
 	       var carData = carStore.getAt(i).data; 
-	       if(carData.state!=0 &&  carData.state!=2) {
+	       if(carData.state!=0) {
 		   //临时加快速度
 	           tempInterval = 500; 
 		   break;

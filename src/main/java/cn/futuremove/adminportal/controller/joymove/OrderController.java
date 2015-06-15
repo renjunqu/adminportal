@@ -40,6 +40,12 @@ public class OrderController {
             Integer limit = Integer.valueOf(request.getParameter("limit"));
 
             orderFilter.setDataFilterFromHTTPReq(request);
+            if(orderFilter.mobileNo==null) {
+                orderFilter.mobileNo = "%";
+            } else {
+                orderFilter.mobileNo+="%";
+            }
+
 
             Map<String, Object> timeScope = new HashMap<String, Object>();
 

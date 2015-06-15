@@ -62,6 +62,12 @@ public class UserGridController {
 
         userFilter.setDataFilterFromHTTPReq(request);
 
+        if(userFilter.mobileNo==null) {
+             userFilter.mobileNo = "%";
+        } else {
+            userFilter.mobileNo+="%";
+        }
+
         List<Map<String,Object>> mapList = joyUserService.getExtendInfoPagedList(" select u.*, m.driverLicenseNumber  from JOY_Users u left join JOY_DriverLicense m on u.mobileNo = m.mobileNo",
                 userFilter,start,limit);
         JSONObject Reobj = new JSONObject();

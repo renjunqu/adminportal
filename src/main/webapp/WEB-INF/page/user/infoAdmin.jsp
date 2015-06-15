@@ -209,13 +209,19 @@
                         text: '审批通过',
                         formBind: true,
                         handler: function (btn, evt) {
-				authenticateUser("id",1,record.get("id"),authUserWin);
+                                if(record.get("authenticateId")==2)
+				        authenticateUser("id",1,record.get("id"),authUserWin);
+			        else
+                                        alert("非审核状态"); 
                         }
                     },{
                         text: '审批失败',
                         formBind: true,
                         handler: function (btn, evt) {
-				authenticateUser("id",3,record.get("id"),authUserWin);
+                                if(record.get("authenticateId")==2)
+				        authenticateUser("id",3,record.get("id"),authUserWin);
+			        else
+                                        alert("非审核状态"); 
 			}
             }] 
         });
@@ -263,13 +269,19 @@
                         text: '审批通过',
                         formBind: true,
                         handler: function (btn, evt) {
-				authenticateUser("driver",1,record.get("id"),authDriverWin);
+                                if(record.get("authenticateDriver")==2)
+				        authenticateUser("driver",1,record.get("id"),authDriverWin);
+			        else
+                                        alert("非审核状态"); 
                         }
                     },{
                         text: '审批失败',
                         formBind: true,
                         handler: function (btn, evt) {
-				authenticateUser("driver",3,record.get("id"),authDriverWin);
+                                if(record.get("authenticateDriver")==2)
+					authenticateUser("driver",3,record.get("id"),authDriverWin);
+			        else
+                                        alert("非审核状态"); 
 			}
             }] 
         });
@@ -618,15 +630,8 @@
                 width: 2.5,
 		renderer:function(value,meta,record,rowIndex){
 			var resultStr = '<input class="qrjGridButton" onclick="viewInfoClick('+rowIndex+');" type="button" value="查看详细信息"></input>';
-			var authIdState = parseInt(record.get('authenticateId'));
-			var authDriverState = parseInt(record.get('authenticateDriver'));
-
-			if(authIdState==2) {
-		               resultStr += '<input class="qrjGridButton" onclick="authIdClick('+rowIndex+');" type="button" value="审核用户身份信息"></input>';
-			} 
-			if(authDriverState==2) {
-		               resultStr += '<input class="qrjGridButton" onclick="authDriverClick('+rowIndex+');" type="button" value="审核用户驾照信息"></input>';
-			}
+		        resultStr += '<input class="qrjGridButton" onclick="authIdClick('+rowIndex+');" type="button" value="审核用户身份信息"></input>';
+		        resultStr += '<input class="qrjGridButton" onclick="authDriverClick('+rowIndex+');" type="button" value="审核用户驾照信息"></input>';
 			return resultStr;
 		},
             }

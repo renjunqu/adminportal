@@ -126,7 +126,7 @@ public class LbsService {
 
     public static void main(String[] args) {
         double v = Math.toDegrees(3);
-        System.out.println(v);
+       // logger.trace(v);
     }
 
 

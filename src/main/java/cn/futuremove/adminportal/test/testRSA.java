@@ -39,26 +39,7 @@ import sun.misc.BASE64Encoder;
 
 public class testRSA {
 	
-	public static void main(String [] args) throws NoSuchAlgorithmException, NoSuchProviderException{
-		
-		 KeyPairGenerator keyPairGen= null;  
-	        try {  
-	            keyPairGen= KeyPairGenerator.getInstance("RSA");  
-	        } catch (NoSuchAlgorithmException e) {  
-	            e.printStackTrace();  
-	        }  
-	        BASE64Encoder encoder = new BASE64Encoder();
-	        keyPairGen.initialize(1024, new SecureRandom());  
-	        KeyPair keyPair= keyPairGen.generateKeyPair();  
-	       
-	        RSAPrivateKey privateKey= (RSAPrivateKey) keyPair.getPrivate(); 
-	        RSAPublicKey  publicKey= (RSAPublicKey) keyPair.getPublic(); 
-	        System.out.println(((String)(encoder.encode(publicKey.getEncoded()))).length());
-	        
-	        
-	        
-	  
-	    
+	public static void main(String [] args) throws NoSuchAlgorithmException, NoSuchProviderException {
 	}
 
 }

@@ -111,15 +111,15 @@ public class CarRegisterController {
 			   Reobj.put("result",0);
 
 		   } else {
-			   System.out.println("action is "+xaction);
+			   logger.trace("action is "+xaction);
 			   Map<String, String[]> parameters = request.getParameterMap();
-			   System.out.println("show parameters: ");
+			   logger.trace("show parameters: ");
 			   
 			   Iterator entries = parameters.entrySet().iterator();
 				while (entries.hasNext()) {
 					Map.Entry entry = (Map.Entry) entries.next();
-					System.out.println("name: "+entry.getKey().toString());
-					System.out.println("value: "+String.valueOf(entry.getValue()));
+					logger.trace("name: "+entry.getKey().toString());
+					logger.trace("value: "+String.valueOf(entry.getValue()));
 				}
 		   }
 		return Reobj;

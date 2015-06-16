@@ -3,6 +3,8 @@ package cn.futuremove.adminportal.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
@@ -16,6 +18,9 @@ import java.util.LinkedList;
  *
  */
 public class GsonInstance {
+
+    final static Logger logger = LoggerFactory.getLogger(GsonInstance.class);
+
 
    public static Type listStringType = new TypeToken<LinkedList<String>>(){}.getType();
 
@@ -38,14 +43,14 @@ public class GsonInstance {
         }
         int length = json.length();
         int piece = (length+ pieceSize -1)/ pieceSize;
-        System.out.println("@length:"+length+"   @piece:"+piece);
+        logger.trace("@length:"+length+"   @piece:"+piece);
         for(int i=0;i<piece;i++){
             int startPosition = i * pieceSize;
             int endPosition = (i + 1) * pieceSize;
             if(endPosition>json.length()){
                 endPosition = json.length();
             }
-//            System.out.println("@startPosition:"+startPosition+"   @endPosition:"+endPosition);
+//            logger.trace("@startPosition:"+startPosition+"   @endPosition:"+endPosition);
             System.out.print(json.substring(startPosition, endPosition));
 
         }

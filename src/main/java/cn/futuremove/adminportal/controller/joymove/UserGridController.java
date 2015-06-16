@@ -56,7 +56,7 @@ public class UserGridController {
         Map<String,Object> likeCondition = new HashMap<String, Object>();
         JOYUser userFilter = new JOYUser();
 
-        //System.out.println("@query:" + query);
+        //logger.trace("@query:" + query);
         Integer start = Integer.valueOf(request.getParameter("start"));
         Integer limit = Integer.valueOf(request.getParameter("limit"));
 
@@ -74,7 +74,7 @@ public class UserGridController {
         JSONArray joyUserJsonList = new JSONArray();
         for(int i=0;i<mapList.size();i++) {
             Map<String,Object> mapE = mapList.get(i);
-          //  System.out.println(SimpleJSONUtil.fromMap(mapE).toJSONString());
+          //  logger.trace(SimpleJSONUtil.fromMap(mapE).toJSONString());
             joyUserJsonList.add(SimpleJSONUtil.fromMap(mapE));
         }
 

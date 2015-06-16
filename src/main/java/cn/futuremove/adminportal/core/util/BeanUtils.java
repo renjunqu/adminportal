@@ -42,8 +42,8 @@ public class BeanUtils {
 			for (int i = 0; i < descriptors.length; i++) {
 				String name = descriptors[i].getName();
 				if (name.startsWith("$")) {
-					// System.out.println("clazz===" + clazz);
-					// System.out.println("descriptors[i].getReadMethod()===" + descriptors[i].getReadMethod());
+					// logger.trace("clazz===" + clazz);
+					// logger.trace("descriptors[i].getReadMethod()===" + descriptors[i].getReadMethod());
 					if (MethodUtils.getAccessibleMethod(clazz, descriptors[i].getReadMethod()) != null) {
 						description.put(name, PropertyUtils.getNestedProperty(bean, name));
 					}

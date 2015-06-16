@@ -6,6 +6,8 @@ import com.futuremove.cacheServer.service.CarService;
 import com.joymove.entity.JOYNCar;
 import com.joymove.util.SimpleJSONUtil;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,13 +26,17 @@ public class CarLocationController {
    @Resource(name = "carService")
     private CarService carService;
 
+    final static Logger logger = LoggerFactory.getLogger(CarLocationController.class);
+
+
+
 
 
     @RequestMapping(value = "/car/loadByCenter/withFilter", method = { RequestMethod.POST, RequestMethod.GET })
     public  @ResponseBody JSONObject loadByCenterWithSessionFilter(HttpServletRequest request, HttpServletResponse response) throws Exception {
         List<Car> carPagedList = new ArrayList<Car>();
         List<Car> carAllList = new ArrayList<Car>();
-        //System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        //logger.trace("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         try {
             Object start = request.getParameter("start");
             Object limit = request.getParameter("limit");
@@ -43,12 +49,12 @@ public class CarLocationController {
             carAllList.addAll(carService.getPagedCarList(likeCondition));
 
         } catch(Exception e) {
-            System.out.println(e);
+            logger.trace(e.getStackTrace().toString());
         }
         JSONObject Reobj  = new JSONObject();
         Reobj.put("root",SimpleJSONUtil.listToJSONArray(carPagedList));
         Reobj.put("total", carAllList.size());
-        //System.out.println("heelp" + Reobj.toJSONString());
+        //logger.trace("heelp" + Reobj.toJSONString());
         return Reobj;
     }
 

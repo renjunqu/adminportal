@@ -8,6 +8,8 @@ import com.joymove.util.SimpleJSONUtil;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,13 +31,17 @@ public class OrderController {
     @Resource(name = "JOYOrderService")
     private JOYOrderService joyOrderService;
 
+    final static Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+
+
 
     @RequestMapping(value = "/order/ext/store", method = { RequestMethod.POST, RequestMethod.GET })
     public @ResponseBody JSONObject modify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JSONObject Reobj = new JSONObject();
         try {
             JOYOrder orderFilter = new JOYOrder();
-            //System.out.println("@query:" + query);
+            //logger.trace("@query:" + query);
             Integer start = Integer.valueOf(request.getParameter("start"));
             Integer limit = Integer.valueOf(request.getParameter("limit"));
 
@@ -93,8 +99,7 @@ public class OrderController {
             Reobj.put("total", joyOrderService.countRecord(orderFilter));
 
         } catch(Exception e) {
-             System.out.println(e);
-            e.printStackTrace();
+             logger.trace(e.getStackTrace().toString());
         }
             return Reobj;
     }

@@ -8,6 +8,8 @@ import com.joymove.velocity.directives.TimeScopeFilter;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +29,10 @@ import java.util.Map;
 
 @Controller
 public class PayHistoryController {
+
+    final static Logger logger = LoggerFactory.getLogger(PayHistoryController.class);
+
+
     @Resource(name = "JOYPayHistoryService")
     private JOYPayHistoryService  joyPayHistoryService;
 
@@ -56,7 +62,7 @@ public class PayHistoryController {
         JSONArray rootArray = new JSONArray();
         for(int i=0;i<payHistories.size();i++) {
             JOYPayHistory payHistory = payHistories.get(i);
-            System.out.println(payHistory);
+            logger.trace(payHistory.toString());
         }
         Reobj.put("root", payHistories);
         Long recordCount  = joyPayHistoryService.countRecordWithTimeScope(payHistoryFilter,timeScope);

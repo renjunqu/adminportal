@@ -43,7 +43,7 @@
 
 <script type="text/javascript">
     function isNum(str) {
-        var re = /^[\d]+$/
+        var re = /^[\d\.]+$/
         return re.test(str);
     }
     var geocoder; 

@@ -57,7 +57,7 @@ public class PayHistoryController {
             timeScope.put("maxRentTime", new Date(Long.parseLong(request.getParameter("maxRentTime"))));
         }
 
-        List<JOYPayHistory> payHistories = joyPayHistoryService.getListWithTimeScope(payHistoryFilter, timeScope, start, limit, "DESC");
+        List<JOYPayHistory> payHistories = joyPayHistoryService.getNeededList(payHistoryFilter, timeScope, start, limit, "DESC");
         JSONObject Reobj = new JSONObject();
         JSONArray rootArray = new JSONArray();
         for(int i=0;i<payHistories.size();i++) {
@@ -65,7 +65,7 @@ public class PayHistoryController {
             logger.trace(payHistory.toString());
         }
         Reobj.put("root", payHistories);
-        Long recordCount  = joyPayHistoryService.countRecordWithTimeScope(payHistoryFilter,timeScope);
+        Long recordCount  = joyPayHistoryService.countRecord(payHistoryFilter,timeScope);
         Reobj.put("total",recordCount);
         return Reobj;
     }

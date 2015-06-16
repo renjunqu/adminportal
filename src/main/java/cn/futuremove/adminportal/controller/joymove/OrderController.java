@@ -80,7 +80,7 @@ public class OrderController {
 
        //     List<Map<String,Object>> mapList = joyUserService.getExtendInfoPagedList(" select u.*, m.driverLicenseNumber  from JOY_Users u left join JOY_DriverLicense m on u.mobileNo = m.mobileNo", userFilter);
 
-            List<Map<String,Object>> mapList = joyOrderService.getExtendInfoPagedList(
+            List<Map<String,Object>> mapList = joyOrderService.getNeededExtendList(
                     " select sum(cp.couponNum) as cNum,ph.type as payType,ph.balance as payBalance,ncar.licensenum as carLicenseNum,car.desp as carDesp ,u.* from " +
                             " JOY_Order u " +
                             " left join JOY_Coupon cp on u.id = cp.orderId " +

@@ -10,28 +10,6 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"></c:set>
 <script type="text/javascript" src="${contextPath}/static/assets/js/jquery.datetimepicker.js"></script>
 <link    rel="stylesheet" href="${contextPath}/static/assets/css/jquery.datetimepicker.css" />
-<style type="text/css">     
-.qrjButtonStyle {
-    border: 10px;
-    color:#fff;
- }
-.x-form-text {
-  height:25px !important;
-}
-.x-form-trigger {
-  height:25px !important;
-}
-
-.qrjGridButton {
-    padding:2px;
-    margin:2px;
-}
-.x-form-item-label {
-   width:200px !important;
-   color:red;
-}
-</style>
-
 <script type="text/javascript">
    function ifPhoneNo(inputtxt)  
    {  
@@ -769,6 +747,25 @@
         });
         userStore.load({params: {start: 0, limit: 20}});
     })
+          //制作需要的css
+          $(".qrjButtonStyle").css({
+            "border":"10px",
+            "color":"#fff"
+          });
+          $(".qrjGridButton").css({
+            "padding":"2px",
+            "margin":"2px"
+          });
+          $(".x-form-text").css({
+            "height":"25px"
+          });
+          $(".x-form-trigger").css({
+            "height":"25px"
+          });
+          $(".x-form-item-label").css({
+            "width":"200px",
+            "color":"red"
+          });
 </script>
 <title></title>
 </head>

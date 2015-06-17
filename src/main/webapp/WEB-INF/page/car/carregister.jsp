@@ -284,6 +284,7 @@
 					  formFields[formFields.length]  = new Ext.form.ComboBox({
 					    fieldLabel: names[colIndex],
 					    id:colName,
+                                            listWidth:200,
 					    name:colName,
 					    typeAhead: true,
                                             emptyText : '请选择',            //未选择时显示的文字
@@ -313,6 +314,7 @@
 						fieldLabel: names[colIndex],
 					        id:colName,
 					        name:colName,
+                                                anchor:"95%",
 						value: record==null?'':record[colName],
 					    });
                              }
@@ -438,6 +440,9 @@
                       ]
                   });
                   detailModifyWin.show(); 
+                  $(columns).each(function(colIndex,colName){
+                      $("#"+colName).css({"width":"200px"});
+                  });
         }
 
         var cm = new Ext.grid.ColumnModel([
@@ -446,7 +451,7 @@
             {header: 'vinNum', width: 1, dataIndex: 'vinNum'},
             {header: '类型', width: 1, dataIndex: 'type'},
             {header: 'T-BOX 编号', width: 1, dataIndex: 'tboxnum'},
-            {header: '入网状态123', width: 1, dataIndex: 'registerState',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
+            {header: '入网状态', width: 1, dataIndex: 'registerState',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
                             if(record.get('registerState')==0) {
                                 return "未完成";
                             } else {
@@ -554,26 +559,18 @@
                              $.query = "";
                              var cardespFilter = Ext.getCmp("cardespFilter").getValue();
                              if(cardespFilter!=null && cardespFilter.length>0) {
-                                 $.query += " Licensenum like \'%" + cardespFilter + "%\' and"; 
+                               //  $.query += " Licensenum like \'%" + cardespFilter + "%\' and"; 
+                                store.lastOptions.params.licensenum= cardespFilter; 
+                              } else {
+                                delete store.lastOptions.params.licensenum;
                               }
                              var vinNumFilter  = Ext.getCmp("vinNumFilter").getValue();
                              if(vinNumFilter!=null && vinNumFilter.length>0) {
-                                 $.query += " vinNum like \'%" + vinNumFilter + "%\' and"; 
+                                store.lastOptions.params.vinNum = vinNumFilter; 
+                              } else {
+                                delete store.lastOptions.params.vinNum;
                               }
-                             var tboxFilter  = Ext.getCmp("tboxFilter").getValue();
-                             if(tboxFilter!=null && tboxFilter.length>0) {
-                                 $.query += " Tboxnum like \'%" + cardespFilter + "%\' and"; 
-                              }
-                             if($.query.length > 0 ) {
-                                 $.query = $.query.substring(0,$.query.length-3);
-                                 params_new = store.lastOptions.params;
-                                 params_new.query = $.query;
-                                 store.load({params: params_new});
-                            } else {
-                                 params_new = store.lastOptions.params;
-                                 delete params_new['query'];
-                                 store.load({params: params_new});
-                            }
+                              store.load(store.lastOptions);
                         },
 			style:{
                              "margin-left":"10px",
@@ -657,7 +654,7 @@
 <div id="a3" style="margin:5px;"></div>
 <div id="a4" style="margin:5px;"></div>
 <script type="text/javascript">
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+    $('.page-content-area').ace_ajax('loadScripts', [], function() {
 
     });
 </script>

@@ -13,7 +13,7 @@
 
        <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
               <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
-              <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/joymove_qrj"> </property>
+              <property name="jdbcUrl" value="jdbc:mysql://123.57.151.176:3306/joymove_qrj"> </property>
               <property name="user" value="root"> </property>
               <property name="password" value="Qrj12345"> </property>
        </bean>

@@ -11,31 +11,6 @@
 
 <script type="text/javascript" src="${contextPath}/static/assets/js/jquery.datetimepicker.js"></script>
 <link    rel="stylesheet" href="${contextPath}/static/assets/css/jquery.datetimepicker.css" />
-<style type="text/css">     
-.qrjButtonStyle {
-    border: 10px;
-    color:#fff;
- }
-.x-form-text {
-  height:25px !important;
-}
-.x-form-trigger {
-  height:25px !important;
-}
-
-.qrjGridButton {
-    padding:2px;
-    margin:2px;
-}
-.x-form-item-label {
-   width:200px !important;
-   color:red;
-}
-.x-form-element .x-form-field {
-  border:0px solid;
-}
-</style>
-
 
 <div id="a1"></div>
 
@@ -537,6 +512,20 @@
 					    jQuery('#maxStopTime').datetimepicker('hide'); //support hide,show and destroy command
 				  }
 	   });
+          //制作需要的css
+          $(".x-form-text").css({
+            "height":"25px"
+          });
+          $(".x-form-trigger").css({
+            "height":"25px"
+          });
+          $(".x-form-item-label").css({
+            "width":"200px",
+            "color":"red"
+          });
+          $(".x-form-element .x-form-field").css({
+            "border":"0px solid"
+          });
       })
   });
 </script>

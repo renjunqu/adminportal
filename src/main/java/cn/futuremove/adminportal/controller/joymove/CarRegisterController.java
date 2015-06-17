@@ -47,7 +47,6 @@ public class CarRegisterController {
 	
 	@RequestMapping(value = "/ext/store", method = { RequestMethod.POST, RequestMethod.GET,RequestMethod.PUT,RequestMethod.DELETE })
 	public @ResponseBody JSONObject carRegisterStore(HttpServletRequest request, HttpServletResponse response) throws Exception {
-	
 		   StringBuffer jb = new StringBuffer();
 		   String line = null;
 		   String xaction = request.getParameter("xaction");
@@ -55,19 +54,19 @@ public class CarRegisterController {
 		   JSONObject Reobj = new JSONObject();
 		   Reobj.put("result","10001");
 		   JOYNCar ncarFilter = new JOYNCar();
-
 		   if(xaction!=null && xaction.equals("read")){
-
 			   Integer start = Integer.valueOf(request.getParameter("start"));
 			   Integer limit = Integer.valueOf(request.getParameter("limit"));
+			   ncarFilter.setDataFilterFromHTTPReq(request);
+			   if(ncarFilter.licensenum!=null) ncarFilter.licensenum+="%";
+			   if(ncarFilter.vinNum!=null)ncarFilter.vinNum+="%";
 			   List<JOYNCar> joynCarList  = joynCarService.getNeededList(ncarFilter, start, limit);
 			   Reobj.put("root", joynCarList);
 			   likeCondition.remove("pageStart");
 			   List<JOYNCar> joynCarAllList =joynCarService.getNeededList(ncarFilter, null, null);
 			   Reobj.put("total",joynCarAllList.size());
-
 		   } else if(xaction !=null && xaction.equals("destroy")){
-			   Integer id =Integer.valueOf( request.getParameter("id") );
+			   Integer id =Integer.valueOf(request.getParameter("id"));
 			   likeCondition.put("id",id);
 			   ncarFilter.id = id;
 			   List<JOYNCar> carList  = joynCarService.getNeededList(ncarFilter, 0, 1); //jdbcTemplate.query(sqlQuery.toString(), new SmartRowMapper<JOYNCar>(JOYNCar.class));
@@ -85,12 +84,7 @@ public class CarRegisterController {
 			   JOYNCar car = new JOYNCar();
 			   ncarFilter.id = Integer.parseInt(request.getParameter("id"));
 			   Field[] nCar_fields = car.getClass().getFields();
-			   for(Field ncar_f:nCar_fields) {
-				   if(request.getParameter(ncar_f.getName())!=null &&
-						   String.valueOf(request.getParameter(ncar_f.getName())).length()>0) {
-					   ncar_f.set(car,request.getParameter(ncar_f.getName()));
-				   }
-			   }
+			   car.setDataFilterFromHTTPReq(request);
 			   joynCarService.updateRecord(car, ncarFilter);
 			   Reobj.put("result",0);
 

@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -93,6 +94,8 @@ public class UserGridController {
             String imageDirection = String.valueOf(request.getParameter("direction"));
             Map<String, Object> likeConditon = new HashMap<String, Object>();
             byte[] imageData = null;
+            BASE64Decoder decoder = new BASE64Decoder();
+
             if (!StringUtils.isBlank(mobileNo)) {
                 idAuthInfoFilter.mobileNo = mobileNo;
                 driverLicenseFilter.mobileNo = mobileNo;
@@ -100,17 +103,17 @@ public class UserGridController {
                     List<JOYDriverLicense> driverLicenses = joyDriverLicenseService.getNeededList(driverLicenseFilter);
                     JOYDriverLicense joyDriverLic = driverLicenses.get(0);
                     if (imageDirection.equals("back")) {
-                        imageData = joyDriverLic.driverAuthInfo_back;
+                        imageData = decoder.decodeBuffer(joyDriverLic.driverAuthInfo_back);
                     } else {
-                        imageData = joyDriverLic.driverAuthInfo;
+                        imageData = decoder.decodeBuffer(joyDriverLic.driverAuthInfo);
                     }
                 } else if (imageType.equals("id")) {
                     List<JOYIdAuthInfo> authInfos = joyIdAuthInfoService.getNeededList(idAuthInfoFilter);
                     JOYIdAuthInfo authInfo = authInfos.get(0);
                     if (imageDirection.equals("back")) {
-                        imageData = authInfo.idAuthInfo_back;
+                        imageData = decoder.decodeBuffer(authInfo.idAuthInfo_back);
                     } else {
-                        imageData = authInfo.idAuthInfo;
+                        imageData = decoder.decodeBuffer(authInfo.idAuthInfo);
                     }
                 }
             }

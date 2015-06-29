@@ -6,10 +6,10 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta charset="utf-8" />
-        <title>Beehive Mobility  Network</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-
+        <title>Soda 运营管理平台</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" /> 
         <!-- load gaode -->
+        <script src="http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"></script>
         <script src="http://webapi.amap.com/maps?v=1.3&key=103e3fae6c781ad2da0587f2b04a2034"></script>
 
 
@@ -62,8 +62,8 @@
                     <!-- #section:basics/navbar.layout.brand -->
                     <a href="#" class="navbar-brand">
                         <small>
-                            <i class="fa fa-leaf"></i>
-                            Beehive Mobility  Network
+                            <i style='display:inline-block;width:20px;height:20px;background:url(${contextPath}/static/assets/images/soda_icon.png) no-repeat;background-size:20px 20px;'></i>
+                            Soda 运营管理平台 
                         </small>
                     </a>
                     <!-- /section:basics/navbar.layout.brand -->
@@ -75,14 +75,13 @@
                     <ul class="nav ace-nav">
                         <li class="light-blue">
                             <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                                <img class="nav-user-photo" src="${contextPath}/static/dist/avatars/user.jpg" alt="Jason's Photo" />
+                               <!--   <img class="nav-user-photo" src="${contextPath}/static/dist/avatars/user.jpg" alt="Jason's Photo" /> -->
                                 <span class="user-info">
                                     <small>
-										欢迎您,
+										欢迎您 <i class="ace-icon fa fa-caret-down"></i>
                                     </small>
-									<c:out value="${sessionScope.SESSION_SYS_USER.userName}"/>
+									<!-- <c:out value="${sessionScope.SESSION_SYS_USER.userName}"/> -->
                                 </span>
-                                <i class="ace-icon fa fa-caret-down"></i>
                             </a>
                             <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                                 <!-- 
@@ -132,34 +131,6 @@
 					} catch (e) {
 					}
 				</script>
-                <div class="sidebar-shortcuts" id="sidebar-shortcuts">
-                    <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                        <button class="btn btn-success">
-                            <i class="ace-icon fa fa-signal"></i>
-                        </button>
-                        <button class="btn btn-info">
-                            <i class="ace-icon fa fa-pencil"></i>
-                        </button>
-                        <!-- #section:basics/sidebar.layout.shortcuts -->
-                        <button class="btn btn-warning">
-                            <i class="ace-icon fa fa-users"></i>
-                        </button>
-                        <button class="btn btn-danger">
-                            <i class="ace-icon fa fa-cogs"></i>
-                        </button>
-                        <!-- /section:basics/sidebar.layout.shortcuts -->
-                    </div>
-                    <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-                        <span class="btn btn-success">
-                        </span>
-                        <span class="btn btn-info">
-                        </span>
-                        <span class="btn btn-warning">
-                        </span>
-                        <span class="btn btn-danger">
-                        </span>
-                    </div>
-                </div>
                 <!-- /.sidebar-shortcuts -->
                 <ul class="nav nav-list">
                 	<c:forEach var="authority" items="${authority}">
@@ -346,7 +317,7 @@
                     <div class="footer-content">
                         <span class="bigger-120">
                             <span class="blue bolder">
-                                Beehive Mobility  Network
+                                 Soda 运营管理平台
                             </span>
                             &copy; 
                             2015
@@ -376,6 +347,8 @@
 				document.write("<script src='${contextPath}/static/dist/js/jquery.mobile.custom.min.js'>" + "<"+"/script>");
 		</script>
         <script src="${contextPath}/static/dist/js/bootstrap.min.js"></script>
+        <script src="${contextPath}/static/assets/js/highcharts.js"></script>
+        <script src="${contextPath}/static/assets/js/exporting.js"></script>
         <!-- ace scripts -->
         <script src="${contextPath}/static/dist/js/ace/elements.scroller.min.js"></script>
         <script src="${contextPath}/static/dist/js/ace/elements.colorpicker.min.js"></script>

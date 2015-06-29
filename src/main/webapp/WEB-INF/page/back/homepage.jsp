@@ -8,7 +8,7 @@ add by figo
 <!-- ajax layout which only needs content area -->
 <div class="page-header" style="margin-top: 200px;text-align: center;">
 	<h1>
-		Mobility Beehive Network
+		Soda 运营平台欢迎您
 	</h1>
 </div>
 

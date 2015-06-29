@@ -66,7 +66,7 @@ public class SysUserController extends JavaEEFrameworkBaseController<SysUser> im
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	@Autowired
+	@Autowired(required = false)
 	private ServletContext servletContext;
 
 

@@ -61,6 +61,14 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <!-- <scope>provided</scope> -->
+            <version>2.5</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>4.0.6.RELEASE</version>
@@ -350,11 +358,13 @@
             <version>1.2.4</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
             <version>0.9.1.2</version>
         </dependency>
+        -->
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
@@ -430,6 +440,7 @@
             <version>4.4</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
@@ -441,7 +452,7 @@
             <artifactId>quartz-jobs</artifactId>
             <version>2.2.1</version>
         </dependency>
-
+        -->
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
@@ -517,8 +528,8 @@
         </dependency>
         <dependency>
             <groupId>org.mybatis.scripting</groupId>
-            <artifactId>mybatis-velocity</artifactId>
-            <version>1.1</version>
+            <artifactId>mybatis-velocity-qrj</artifactId>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>

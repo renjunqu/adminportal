@@ -19,9 +19,9 @@ public class BaseMain {
         initFlag = true;
         factory = new ClassPathXmlApplicationContext(
                 new String[]{
-                        "spring_config/applicationContext.xml"
-                        , "spring_config/applicationContext-security.xml"
-                        , "spring_config/applicationContext-mongo.xml"
+                        "spring_config/applicationContext-mvc.xml"
+                   //     , "spring_config/applicationContext-security.xml"
+                   //     , "spring_config/applicationContext-mongo.xml"
                 }
         );
 

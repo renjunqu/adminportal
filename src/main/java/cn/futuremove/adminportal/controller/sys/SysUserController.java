@@ -471,6 +471,13 @@ public class SysUserController extends JavaEEFrameworkBaseController<SysUser> im
 		return "back/homepage";
 	}
 
+	@RequestMapping("/underconstruction")
+	public String underconstruction(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setCharacterEncoding("UTF-8");
+		return "back/underconstruction";
+	}
+
+
 	@RequestMapping("/dict")
 	public String dict(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		return "back/dict";

@@ -303,7 +303,6 @@
                     </div>
                     <!-- /.ace-settings-container -->
                     <!-- /section:settings.box -->
-                    <div style="width:100px;height:200px;border:1px solid;">中国人</div>
                     <div class="page-content-area" data-ajax-content="true">
                         <!-- ajax content goes here -->
                     </div>

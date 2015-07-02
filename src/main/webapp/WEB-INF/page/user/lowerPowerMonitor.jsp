@@ -193,7 +193,7 @@
      url:"${contextPath}/car/loadByCenter/withFilter",
      idProperty:"vinNum",
      root:"root",
-     fields: ["owner","latitude", "state","vinNum","longitude"],
+     fields: ["owner","latitude", "state","vinNum","longitude","licenseNum"],
      listeners:{
           "datachanged":function(store){
                     renderCarByJson(map);
@@ -264,7 +264,7 @@
 
 
     var cm = new Ext.grid.ColumnModel([
-      {header: 'vinNum', width: 1, dataIndex: 'vinNum'},
+      {header: '车牌号', width: 1, dataIndex: 'licenseNum'},
       {header: '使用者', width: 1, dataIndex: 'owner'},
       {header: '车辆状态', width: 1, dataIndex: 'state',renderer:function(value,cellmeta,record,rowIndex, columnIndex, store){
                             if(record.get('state')==0) {

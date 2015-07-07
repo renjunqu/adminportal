@@ -146,7 +146,7 @@
       var obj = carStore.getAt(i).data;
       var x = obj.longitude;
       var y = obj.latitude;
-	  console.log("hello world");
+      console.log("hello world");
 
         console.log("@x:"+x+"    @y:"+y);
 
@@ -193,7 +193,7 @@
      url:"${contextPath}/car/loadByCenter/withFilter",
      idProperty:"vinNum",
      root:"root",
-     fields: ["owner","latitude", "state","vinNum","longitude","licenseNum"],
+     fields: ["owner","latitude","longitude","state","vinNum","licenseNum"],
      listeners:{
           "datachanged":function(store){
                     renderCarByJson(map);

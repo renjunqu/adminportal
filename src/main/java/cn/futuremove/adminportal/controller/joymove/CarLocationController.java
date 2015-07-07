@@ -1,10 +1,13 @@
 package cn.futuremove.adminportal.controller.joymove;
 
 
-import com.futuremove.cacheServer.entity.Car;
-import com.futuremove.cacheServer.service.CarService;
-import com.joymove.entity.JOYNCar;
-import com.joymove.util.SimpleJSONUtil;
+import com.futuremove.cacheServer.entity.CarDynProps;
+import com.futuremove.cacheServer.service.CarDynPropsService;
+import com.futuremove.cacheServer.utils.CoordinatesUtil;
+import com.futuremove.cacheServer.utils.Gps;
+import com.mongodb.client.FindIterable;
+import org.json.simple.JSONArray;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +26,12 @@ import java.util.*;
  */
 @Controller
 public class CarLocationController {
+    /*
    @Resource(name = "carService")
     private CarService carService;
+*/
+    @Resource(name = "CarDynPropsService")
+    private CarDynPropsService carPropsService;
 
     final static Logger logger = LoggerFactory.getLogger(CarLocationController.class);
 
@@ -34,26 +41,36 @@ public class CarLocationController {
 
     @RequestMapping(value = "/car/loadByCenter/withFilter", method = { RequestMethod.POST, RequestMethod.GET })
     public  @ResponseBody JSONObject loadByCenterWithSessionFilter(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<Car> carPagedList = new ArrayList<Car>();
-        List<Car> carAllList = new ArrayList<Car>();
+        JSONArray carArray  = new JSONArray();
+        CarDynProps carDynPropsFilter = new CarDynProps();
+        CarDynProps carProps = new CarDynProps();
+        Long count = 0L;
         //logger.trace("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         try {
-            Object start = request.getParameter("start");
-            Object limit = request.getParameter("limit");
+            Long startV = Long.parseLong(request.getParameter("start"));
+            Long limitV = Long.parseLong(request.getParameter("limit"));
             Map<String,Object> likeCondition = new HashMap<String, Object>();
-            likeCondition.put("start",start==null?0:String.valueOf(start));
-            likeCondition.put("limit",limit==null?5:String.valueOf(limit));
-            carPagedList.addAll(carService.getPagedCarList(likeCondition));
-            likeCondition.put("start", 0);
-            likeCondition.put("limit", 0);
-            carAllList.addAll(carService.getPagedCarList(likeCondition));
+
+            FindIterable<Document> carPropsDocs =  carPropsService.find(carDynPropsFilter).skip(startV.intValue()).limit(limitV.intValue());
+            for(Document doc:carPropsDocs) {
+                JSONObject carJson = new JSONObject();
+                carProps.fromDocument(doc);
+                carJson.putAll(doc);
+                Gps carGcj02 = CoordinatesUtil.gps84_To_Gcj02(carProps.location.coordinates.get(1),
+                        carProps.location.coordinates.get(0));
+                carJson.put("longitude", carGcj02.getWgLon());
+                carJson.put("latitude", carGcj02.getWgLat());
+                carArray.add(carJson);
+            }
+                count  = carPropsService.count(carDynPropsFilter);
+
 
         } catch(Exception e) {
             logger.trace(e.getStackTrace().toString());
         }
         JSONObject Reobj  = new JSONObject();
-        Reobj.put("root",SimpleJSONUtil.listToJSONArray(carPagedList));
-        Reobj.put("total", carAllList.size());
+        Reobj.put("root",carArray);
+        Reobj.put("total", count);
         //logger.trace("heelp" + Reobj.toJSONString());
         return Reobj;
     }

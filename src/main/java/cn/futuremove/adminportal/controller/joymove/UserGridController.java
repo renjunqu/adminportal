@@ -1,10 +1,9 @@
 package cn.futuremove.adminportal.controller.joymove;
 
 
-import com.futuremove.cacheServer.service.CarService;
+import com.futuremove.cacheServer.service.CarDynPropsService;
 import com.joymove.entity.JOYDriverLicense;
 import com.joymove.entity.JOYIdAuthInfo;
-import com.joymove.entity.JOYOrder;
 import com.joymove.entity.JOYUser;
 import com.joymove.service.JOYDriverLicenseService;
 import com.joymove.service.JOYIdAuthInfoService;
@@ -24,7 +23,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +32,8 @@ import java.util.Map;
 @Controller
 public class UserGridController {
 
-    @Resource(name = "carService")
-    private CarService cacheCarService;
+    @Resource(name = "CarDynPropsService")
+    private CarDynPropsService carPropsService;
 
     @Resource(name = "JOYUserService")
     private JOYUserService joyUserService;

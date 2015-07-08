@@ -7,6 +7,7 @@ import com.joymove.service.JOYOrderService;
 import com.joymove.util.SimpleJSONUtil;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.asn1.cms.TimeStampAndCRL;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
+
 
 /**
  * Created by figoxu on 15/4/24.
@@ -93,6 +96,19 @@ public class OrderController {
 
              for(int i=0;i<mapList.size();i++) {
                  Map<String,Object> mapE = mapList.get(i);
+                 Date stopTime = (Date)mapE.get("stopTime");
+                 Integer orderState = (Integer)mapE.get("state");
+                 Integer id = (Integer)mapE.get("id");
+
+
+                 if (orderState != JOYOrder.state_busy && stopTime.getTime() == JOYOrder.defaultStopTime.getTime()) {
+                     mapE.put("stopTime", new Timestamp( ((Date)mapE.get("startTime")).getTime() + 60 * 1000));
+                     mapE.put("stopLatitude", mapE.get("startLatitude"));
+                     mapE.put("stopLongitude", mapE.get("startLongitude"));
+                 } else if (orderState == JOYOrder.state_busy) {
+                     mapE.put("stopTime", new Date(System.currentTimeMillis()));
+                 }
+
                  joyExtendOrderJsonList.add(SimpleJSONUtil.fromMap(mapE));
              }
             Reobj.put("root",joyExtendOrderJsonList);
